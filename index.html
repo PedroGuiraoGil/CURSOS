@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
+<script async src="https://js.stripe.com/v3/buy-button.js"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedro Guirao Gil - Data, AI & Creativity</title>
     <style>
+
+/* --- ESTILOS PARA STRIPE --- */
+/* Contenedor en el Modal de Imágenes */
+.viewer-controls-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Separación entre flechas y botón */
+    margin-top: 15px;
+}
+
+/* Ajuste para el botón en la Home debajo de novelas */
+.stripe-home-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* Alineado a la derecha igual que el botón de novelas */
+    padding-right: 20px;
+    margin-top: 10px;
+}
+
+/* Opcional: Ajuste fino para que visualmente encaje */
+.stripe-home-container stripe-buy-button {
+    transform: scale(0.9);
+    transform-origin: right top;
+}
+
+
         /* --- ESTILOS BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -289,6 +319,15 @@
                         📚 <span data-translation-key="btnNovels">MIS NOVELAS</span>
                     </button>
                 </div>
+
+		<div class="stripe-home-container">
+    <stripe-buy-button
+        buy-button-id="buy_btn_1Szc9xLMuCf9ela0GVyNo0PD"
+        publishable-key="pk_live_51SzbaxLMuCf9ela0lFnv8OpenuCoG02c4crjmSRW1oq85DdwAaEhmMmIS0gYMH9wYbGr6AVXxzbJf7IdA6sptgxy00dKGPgVSc"
+    >
+    </stripe-buy-button>
+</div>
+
             </div>
         </div>
 
@@ -539,8 +578,21 @@
                 </div>
 
                 <div class="carousel-controls">
-                    <button class="nav-button" onclick="prevBook()">←</button>
-                    <button class="nav-button" onclick="nextBook()">→</button>
+                   
+
+<div class="viewer-controls-wrapper">
+    <div class="nav-buttons-group">
+        <button class="nav-btn" onclick="navImage(-1)" style="font-size: 2rem; background:none; border:none; color:white; cursor:pointer; margin-right:10px;">&#10094;</button>
+        <button class="nav-btn" onclick="navImage(1)" style="font-size: 2rem; background:none; border:none; color:white; cursor:pointer;">&#10095;</button>
+    </div>
+
+    <stripe-buy-button
+        buy-button-id="buy_btn_1Szc9xLMuCf9ela0GVyNo0PD"
+        publishable-key="pk_live_51SzbaxLMuCf9ela0lFnv8OpenuCoG02c4crjmSRW1oq85DdwAaEhmMmIS0gYMH9wYbGr6AVXxzbJf7IdA6sptgxy00dKGPgVSc"
+    >
+    </stripe-buy-button>
+</div>
+
                 </div>
             </div>
         </div>
