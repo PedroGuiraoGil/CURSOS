@@ -815,24 +815,25 @@
         });
 
         // --- NAVIGATION ---
-        function showSection(sectionId) {
-            document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
-            
-            // Si es un toggle para juegos dentro de IA
-            if(sectionId === 'games-gallery') {
-                document.getElementById('ai').classList.add('active'); 
-                document.getElementById('games-gallery').style.display = 'block';
-                return;
-            }
+       function showSection(sectionId) {
+    // 1. Ocultar todas las secciones
+    document.querySelectorAll('.section-content').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none'; // Asegura que se oculten
+    });
 
-            const target = document.getElementById(sectionId);
-            if(target) target.classList.add('active');
-            
-            // Actualizar estado botones
-            document.querySelectorAll('.menu-btn, .novel-btn').forEach(b => b.classList.remove('active'));
-            const clickedBtn = Array.from(document.querySelectorAll('button')).find(b => b.getAttribute('onclick')?.includes(sectionId));
-            if(clickedBtn) clickedBtn.classList.add('active');
-        }
+    // 2. Desactivar estado activo de todos los botones del menú
+    document.querySelectorAll('.menu-btn, .novel-btn').forEach(b => b.classList.remove('active'));
+
+    // 3. Mostrar la sección seleccionada
+    const target = document.getElementById(sectionId);
+    if (target) {
+        target.style.display = 'block';
+        setTimeout(() => target.classList.add('active'), 10); // Pequeño delay para la animación
+    }
+
+    // 4. (Opcional) Resaltar el botón presionado si pasas 'this' o buscas por ID
+}
 
         // --- LANGUAGE ---
         function changeLanguage(lang) {
