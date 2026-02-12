@@ -578,24 +578,19 @@
                 </div>
 
                 <div class="carousel-controls">
-                   
-
-<div class="viewer-controls-wrapper">
-    <div class="nav-buttons-group">
-        <button class="nav-btn" onclick="navImage(-1)" style="font-size: 2rem; background:none; border:none; color:white; cursor:pointer; margin-right:10px;">&#10094;</button>
-        <button class="nav-btn" onclick="navImage(1)" style="font-size: 2rem; background:none; border:none; color:white; cursor:pointer;">&#10095;</button>
-    </div>
-
-    <stripe-buy-button
-        buy-button-id="buy_btn_1Szc9xLMuCf9ela0GVyNo0PD"
-        publishable-key="pk_live_51SzbaxLMuCf9ela0lFnv8OpenuCoG02c4crjmSRW1oq85DdwAaEhmMmIS0gYMH9wYbGr6AVXxzbJf7IdA6sptgxy00dKGPgVSc"
-    >
-    </stripe-buy-button>
-</div>
-
-                </div>
-            </div>
+    <div class="viewer-controls-wrapper">
+        <div class="nav-buttons-group">
+            <button class="nav-btn" onclick="prevBook()" style="font-size: 2rem; background:none; border:none; color:white; cursor:pointer; margin-right:10px;">&#10094;</button>
+            <button class="nav-btn" onclick="nextBook()" style="font-size: 2rem; background:none; border:none; color:white; cursor:pointer;">&#10095;</button>
         </div>
+
+        <stripe-buy-button
+            buy-button-id="buy_btn_1Szc9xLMuCf9ela0GVyNo0PD"
+            publishable-key="pk_live_51SzbaxLMuCf9ela0lFnv8OpenuCoG02c4crjmSRW1oq85DdwAaEhmMmIS0gYMH9wYbGr6AVXxzbJf7IdA6sptgxy00dKGPgVSc"
+        >
+        </stripe-buy-button>
+    </div>
+</div>
 
         <div id="mediaModal" class="modal-overlay" onclick="closeMediaModal(event)">
             <div class="modal-content">
@@ -657,9 +652,8 @@
 
     </div>
 
-    <script>
+   <script>
         // --- DATA ---
-        // Actualizada ruta a CURSOS y corregidos nombres
         const dashboards = {
             ventas: ["https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/ventas1.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/ventas2.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/ventas3.jpg"],
             futbol: ["https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/futbol1.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/futbol2.jpg"],
@@ -667,14 +661,14 @@
             coches: ["https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/alquiler1.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/alquiler2.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/alquiler3.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/alquiler4.jpg"]
         };
 
-        // ... (resto del script sin cambios, ya que los libros usan URLs externas)
         const booksData = [
             { id: "fin", link: "https://www.amazon.es/Fin-Pedro-G-Guirao-ebook/dp/B0DYK9VBMS" },
             { id: "omg", link: "https://www.overdrive.com/media/10591700/%C2%A1oh-my-god" },
             { id: "manual", link: "https://www.amazon.es/Manual-B%C3%A1sico-Conquista-Pedro-Guirao-ebook/dp/B0DWXRXMLV" },
             { id: "tocata", link: "https://www.amazon.es/dp/B0DVMY39JD", trailer: "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/BOOKTRAILER1.mp4", trailer2: "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/BOOKTRAILER2.mp4" },
             { id: "blues", link: "https://www.kobo.com/us/es/ebook/escali-s-blues" },
-            { id: "exodos", link: "https://www.amazon.es/%C3%89xodos-Kia-P-Cabdill-ebook/dp/B0FF3ZQG4L/ref=sr_1_5?dib=eyJ2IjoiMSJ9.ntd9raXTh6Dr1o0eFiP6Xo-1Ikqe6y6zLet0Bmd5YiB3KHKLVAQZI8iXShXE31fmiPEYN1meEQdvxU8qtVTv91fXyoyT5O-92Gmd_mghNXaysAQPKtjBQbTdsTcxieKrPt2KsZcbYntay3KBm0Rmc7eMRl27PSPCIebIzhWS2gS5bRYDYEqmqGfX6GF1paLaBLUmOxLA7MkOC_zHUYOXPInJ9Xl2FxZBRZgc1SYd8LovVvGzntEHhCWm41ykdac2sKyNDcwtEC0zOa27h6LRGfJbv-9OmE5eAbVV480BX3o.pdY6qLOjkdl4KPwVCvOQTbFaEpWSbrpJmnBdw5Nhtdw&dib_tag=se&keywords=EXODOS&qid=1764697715&sr=8-5", audio: "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/EXODOSESPANOL.mp3" }
+            // URL CORREGIDA Y ACORTADA PARA EVITAR ERRORES
+            { id: "exodos", link: "https://www.amazon.es/dp/B0FF3ZQG4L", audio: "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/EXODOSESPANOL.mp3" }
         ];
 
         const translations = {
@@ -694,11 +688,10 @@
                 bookTitle_blues: "ESCALI'S BLUES", bookDesc_blues: "La secuela noir de la Teniente Escali.",
                 bookTitle_exodos: "ÉXODOS", bookDesc_exodos: "Ciencia ficción distópica bajo el pseudónimo Kia P. Cabdill.",
                 
-                // Nuevas traducciones para las descripciones (se usan data-translation-key en el HTML)
                 descExcelBasic: "Domina el entorno Office 365, atajos de teclado y la gestión eficiente de libros. Aprende las buenas prácticas para introducir datos, referencias relativas y absolutas, funciones esenciales (SI, SUMAR.SI) y preparación para impresión.",
                 descExcelInter: "El corazón del análisis de datos. Profundizamos en Tablas Dinámicas, Segmentación de datos y Gráficos combinados. Dominarás funciones de búsqueda modernas (BUSCARX) y Validación de Datos.",
                 descExcelAdv: "El salto a la automatización. Introducción a Power Query para limpieza de datos (ETL) y Power Pivot para modelado. Conexión a orígenes externos y la puerta de entrada a Power BI.",
-                descSheets: "La alternativa 100% colaborativa a Excel. Aprende a trabajar en tiempo real con tu equipo, historial de versiones y funciones exclusivas de nube (`IMPORTRANGE`, `GOOGLEFINANCE`).",
+                descSheets: "La alternativa 100% colaborativa a Excel. Aprende a trabajar en tiempo real con tu equipo, historial de versiones y funciones exclusivas de nube (IMPORTRANGE, GOOGLEFINANCE).",
                 descDocs: "Ofimática colaborativa esencial. Redacción de documentos y presentaciones donde múltiples usuarios editan a la vez. Gestión de comentarios y sugerencias.",
                 descForms: "La herramienta más sencilla para capturar datos. Creación de encuestas, exámenes o formularios de registro que vuelcan la información automáticamente en Sheets.",
                 descDrive: "El centro de mando de tu oficina digital. Almacenamiento seguro en la nube, gestión avanzada de permisos de carpetas compartidas y sincronización.",
@@ -754,7 +747,7 @@
                 descExcelBasic: "Master the Office 365 environment, keyboard shortcuts, and efficient workbook management. Learn best practices for data entry, relative and absolute references, and essential functions.",
                 descExcelInter: "The heart of data analysis. We delve into Pivot Tables, Slicers, and Combo Charts. You will master modern lookup functions (XLOOKUP) and Data Validation.",
                 descExcelAdv: "The leap to automation. Introduction to Power Query for data cleaning (ETL) and Power Pivot for modeling. Connection to external sources and the gateway to Power BI.",
-                descSheets: "The 100% collaborative alternative to Excel. Learn to work in real-time with your team, version history, and exclusive cloud functions (`IMPORTRANGE`).",
+                descSheets: "The 100% collaborative alternative to Excel. Learn to work in real-time with your team, version history, and exclusive cloud functions.",
                 descDocs: "Essential collaborative office tools. Drafting documents and presentations where multiple users edit at once. Management of comments and suggestions.",
                 descForms: "The easiest tool for capturing data. Creation of surveys, quizzes, or registration forms that automatically dump information into Sheets.",
                 descDrive: "The command center of your digital office. Secure cloud storage, advanced management of shared folder permissions, and synchronization.",
@@ -803,11 +796,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             const parts = document.querySelectorAll('.highlight-text .part');
             let currentPart = 0;
-            setInterval(() => {
-                parts.forEach(p => p.classList.remove('highlight'));
-                parts[currentPart].classList.add('highlight');
-                currentPart = (currentPart + 1) % parts.length;
-            }, 2500);
+            if(parts.length > 0){
+                setInterval(() => {
+                    parts.forEach(p => p.classList.remove('highlight'));
+                    parts[currentPart].classList.add('highlight');
+                    currentPart = (currentPart + 1) % parts.length;
+                }, 2500);
+            }
 
             updateCarousel();
             changeLanguage('es');
@@ -815,36 +810,30 @@
         });
 
         // --- NAVIGATION ---
-       function showSection(sectionId) {
-    // 1. Ocultar todas las secciones
-    document.querySelectorAll('.section-content').forEach(s => {
-        s.classList.remove('active');
-        s.style.display = 'none'; // Asegura que se oculten
-    });
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-content').forEach(s => {
+                s.classList.remove('active');
+                s.style.display = 'none';
+            });
+            document.querySelectorAll('.menu-btn, .novel-btn').forEach(b => b.classList.remove('active'));
 
-    // 2. Desactivar estado activo de todos los botones del menú
-    document.querySelectorAll('.menu-btn, .novel-btn').forEach(b => b.classList.remove('active'));
-
-    // 3. Mostrar la sección seleccionada
-    const target = document.getElementById(sectionId);
-    if (target) {
-        target.style.display = 'block';
-        setTimeout(() => target.classList.add('active'), 10); // Pequeño delay para la animación
-    }
-
-    // 4. (Opcional) Resaltar el botón presionado si pasas 'this' o buscas por ID
-}
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.style.display = 'block';
+                setTimeout(() => target.classList.add('active'), 10);
+            }
+        }
 
         // --- LANGUAGE ---
         function changeLanguage(lang) {
             currentLanguage = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.btn-${lang}`).classList.add('active');
+            const activeBtn = document.querySelector(`.btn-${lang}`);
+            if(activeBtn) activeBtn.classList.add('active');
             
             document.querySelectorAll('[data-translation-key]').forEach(el => {
                 const key = el.dataset.translationKey;
                 if (translations[lang][key]) {
-                    // Si contiene HTML (strong), usar innerHTML
                     if (key === 'aiDesc') {
                         el.innerHTML = translations[lang][key];
                     } else {
@@ -872,33 +861,39 @@
         function updateBookDisplay() {
             const book = booksData[currentBook];
             const lang = translations[currentLanguage];
-            document.getElementById('bookTitle').textContent = lang[`bookTitle_${book.id}`];
-            document.getElementById('bookDescription').textContent = lang[`bookDesc_${book.id}`];
-            const actionContainer = document.getElementById('bookActions');
-            actionContainer.innerHTML = '';
+            const titleEl = document.getElementById('bookTitle');
+            const descEl = document.getElementById('bookDescription');
             
-            const mainBtn = document.createElement('a');
-            mainBtn.href = book.link; mainBtn.target = "_blank"; mainBtn.className = "book-action-btn";
-            mainBtn.style.background = "#8E44AD"; mainBtn.textContent = lang.bookBtnShop;
-            actionContainer.appendChild(mainBtn);
+            if(titleEl) titleEl.textContent = lang[`bookTitle_${book.id}`];
+            if(descEl) descEl.textContent = lang[`bookDesc_${book.id}`];
+            
+            const actionContainer = document.getElementById('bookActions');
+            if(actionContainer) {
+                actionContainer.innerHTML = '';
+                
+                const mainBtn = document.createElement('a');
+                mainBtn.href = book.link; mainBtn.target = "_blank"; mainBtn.className = "book-action-btn";
+                mainBtn.style.background = "#8E44AD"; mainBtn.textContent = lang.bookBtnShop;
+                actionContainer.appendChild(mainBtn);
 
-            if (book.trailer) {
-                const trBtn = document.createElement('button');
-                trBtn.className = "book-action-btn"; trBtn.style.background = "#c0392b";
-                trBtn.textContent = lang.bookBtnTrailer; trBtn.onclick = () => openMediaModal('video', book.trailer);
-                actionContainer.appendChild(trBtn);
-            }
-            if (book.trailer2) {
-                const trBtn2 = document.createElement('button');
-                trBtn2.className = "book-action-btn"; trBtn2.style.background = "#e74c3c";
-                trBtn2.textContent = lang.bookBtnTrailer + " 2"; trBtn2.onclick = () => openMediaModal('video', book.trailer2);
-                actionContainer.appendChild(trBtn2);
-            }
-            if (book.audio) {
-                const audBtn = document.createElement('button');
-                audBtn.className = "book-action-btn"; audBtn.style.background = "#27ae60";
-                audBtn.textContent = lang.bookBtnAudio; audBtn.onclick = () => openMediaModal('audio', book.audio);
-                actionContainer.appendChild(audBtn);
+                if (book.trailer) {
+                    const trBtn = document.createElement('button');
+                    trBtn.className = "book-action-btn"; trBtn.style.background = "#c0392b";
+                    trBtn.textContent = lang.bookBtnTrailer; trBtn.onclick = () => openMediaModal('video', book.trailer);
+                    actionContainer.appendChild(trBtn);
+                }
+                if (book.trailer2) {
+                    const trBtn2 = document.createElement('button');
+                    trBtn2.className = "book-action-btn"; trBtn2.style.background = "#e74c3c";
+                    trBtn2.textContent = lang.bookBtnTrailer + " 2"; trBtn2.onclick = () => openMediaModal('video', book.trailer2);
+                    actionContainer.appendChild(trBtn2);
+                }
+                if (book.audio) {
+                    const audBtn = document.createElement('button');
+                    audBtn.className = "book-action-btn"; audBtn.style.background = "#27ae60";
+                    audBtn.textContent = lang.bookBtnAudio; audBtn.onclick = () => openMediaModal('audio', book.audio);
+                    actionContainer.appendChild(audBtn);
+                }
             }
         }
         function nextBook() { currentBook = (currentBook + 1) % totalBooks; updateCarousel(); }
@@ -910,37 +905,65 @@
             currentGalleryKey = key;
             const images = dashboards[key];
             const grid = document.getElementById('galleryGrid');
-            grid.innerHTML = '';
-            images.forEach((src, idx) => {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.innerHTML = `<img src="${src}" onerror="this.src='https://placehold.co/600x400/ccc/fff?text=N/A'">`;
-                item.onclick = () => openImageModal(null, idx);
-                grid.appendChild(item);
-            });
-            document.getElementById('galleryTitle').textContent = key.toUpperCase();
+            if(grid) {
+                grid.innerHTML = '';
+                images.forEach((src, idx) => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${src}" onerror="this.src='https://placehold.co/600x400/ccc/fff?text=N/A'">`;
+                    item.onclick = () => openImageModal(null, idx);
+                    grid.appendChild(item);
+                });
+            }
+            const titleEl = document.getElementById('galleryTitle');
+            if(titleEl) titleEl.textContent = key.toUpperCase();
             openModal('galleryModal');
         }
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function openModal(id) { 
+            const el = document.getElementById(id);
+            if(el) el.style.display = 'flex'; 
+        }
         function closeModal(id, event) {
             if(event && event.target !== event.currentTarget && !event.target.classList.contains('close-modal')) return;
-            document.getElementById(id).style.display = 'none';
-            if(id === 'mediaModal') { document.getElementById('videoPlayer').pause(); document.getElementById('audioPlayer').pause(); }
+            const el = document.getElementById(id);
+            if(el) el.style.display = 'none';
+            if(id === 'mediaModal') { 
+                const v = document.getElementById('videoPlayer');
+                const a = document.getElementById('audioPlayer');
+                if(v) v.pause(); 
+                if(a) a.pause(); 
+            }
         }
         function openMediaModal(type, src) {
             const vPlayer = document.getElementById('videoPlayer'); const aPlayer = document.getElementById('audioPlayer');
-            vPlayer.style.display = 'none'; aPlayer.style.display = 'none'; vPlayer.pause(); aPlayer.pause();
-            if (type === 'video') { vPlayer.src = src; vPlayer.style.display = 'block'; vPlayer.play().catch(e => console.log(e)); } 
-            else { aPlayer.src = src; aPlayer.style.display = 'block'; aPlayer.play().catch(e => console.log(e)); }
+            if(vPlayer) { vPlayer.style.display = 'none'; vPlayer.pause(); }
+            if(aPlayer) { aPlayer.style.display = 'none'; aPlayer.pause(); }
+            
+            if (type === 'video' && vPlayer) { 
+                vPlayer.src = src; vPlayer.style.display = 'block'; vPlayer.play().catch(e => console.log(e)); 
+            } 
+            else if (aPlayer) { 
+                aPlayer.src = src; aPlayer.style.display = 'block'; aPlayer.play().catch(e => console.log(e)); 
+            }
             openModal('mediaModal');
         }
         function closeMediaModal(e) { closeModal('mediaModal', e); }
         function closeGalleryModal(e) { closeModal('galleryModal', e); }
         function openImageModal(e, index) { currentImageIndex = index; updateImageViewer(); openModal('imageModal'); }
-        function updateImageViewer() { document.getElementById('fullImage').src = dashboards[currentGalleryKey][currentImageIndex]; }
-        function navImage(dir) { const len = dashboards[currentGalleryKey].length; currentImageIndex = (currentImageIndex + dir + len) % len; updateImageViewer(); }
+        function updateImageViewer() { 
+            const el = document.getElementById('fullImage');
+            if(el && dashboards[currentGalleryKey]) el.src = dashboards[currentGalleryKey][currentImageIndex]; 
+        }
+        function navImage(dir) { 
+            if(!currentGalleryKey || !dashboards[currentGalleryKey]) return;
+            const len = dashboards[currentGalleryKey].length; 
+            currentImageIndex = (currentImageIndex + dir + len) % len; 
+            updateImageViewer(); 
+        }
         function closeImageModal(e) { closeModal('imageModal', e); }
     </script>
+		
+		
 </body>
 </html>
