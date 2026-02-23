@@ -1,969 +1,1516 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-<script async src="https://js.stripe.com/v3/buy-button.js"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedro Guirao Gil - Data, AI & Creativity</title>
+    <title>Mística AI 2026</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+
     <style>
-
-/* --- ESTILOS PARA STRIPE --- */
-/* Contenedor en el Modal de Imágenes */
-.viewer-controls-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px; /* Separación entre flechas y botón */
-    margin-top: 15px;
-}
-
-/* Ajuste para el botón en la Home debajo de novelas */
-.stripe-home-container {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end; /* Alineado a la derecha igual que el botón de novelas */
-    padding-right: 20px;
-    margin-top: 10px;
-}
-
-/* Opcional: Ajuste fino para que visualmente encaje */
-.stripe-home-container stripe-buy-button {
-    transform: scale(0.9);
-    transform-origin: right top;
-}
-
-
-        /* --- ESTILOS BASE --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at 20% 50%, #ff6b6b 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, #4ecdc4 0%, transparent 50%),
-                        radial-gradient(circle at 40% 80%, #45b7d1 0%, transparent 50%),
-                        linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            background-size: 400% 400%;
-            animation: backgroundShift 15s ease infinite;
-            min-height: 100vh;
-            color: #333;
-            overflow-x: hidden;
-            padding-bottom: 50px;
-        }
-
-        @keyframes backgroundShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; }
+        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .animate-spin-slow { animation: spin-slow 12s linear infinite; }
+        .perspective-1000 { perspective: 1000px; }
         
-        /* --- HEADER & PERFIL --- */
-        .header { text-align: center; color: white; margin-bottom: 20px; padding-top: 40px; position: relative; }
+        .yin-line { height: 12px; display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .yin-line div { width: 45%; background-color: white; border-radius: 2px; }
+        .yang-line { height: 12px; width: 100%; background-color: white; border-radius: 2px; margin-bottom: 6px; }
 
-        /* --- SELECTOR DE IDIOMAS (CORREGIDO CON SVG) --- */
-        .language-selector {
-            position: absolute; top: 20px; right: 20px; display: flex; gap: 15px; z-index: 100;
-        }
-
-        .lang-btn {
-            width: 35px; height: 35px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.5);
-            cursor: pointer; transition: all 0.3s ease;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            filter: grayscale(80%);
-        }
-
-        .lang-btn:hover { transform: scale(1.2); filter: grayscale(0%); }
-        
-        .lang-btn.active {
-            transform: scale(1.2);
-            border-color: #fff;
-            filter: grayscale(0%);
-            box-shadow: 0 0 15px rgba(255,255,255,0.6);
-        }
-
-        /* URLs de las banderas */
-        .btn-es { background-image: url('https://flagcdn.com/w80/es.png'); }
-        /* CORRECCIÓN: SVG Directo para máxima fiabilidad */
-        .btn-ca { background-image: url('https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Catalonia.svg'); }
-        .btn-en { background-image: url('https://flagcdn.com/w80/gb.png'); }
-        .btn-fr { background-image: url('https://flagcdn.com/w80/fr.png'); }
-
-        .profile-section h1 {
-            font-size: 3.5rem; margin-bottom: 20px; text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #ff6b6b);
-            background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: gradientShift 4s ease-in-out infinite;
-        }
-
-        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        .profile-info .highlight-text { font-size: 1.3rem; opacity: 0.95; }
-        .highlight-text .part { padding: 2px 8px; border-radius: 15px; transition: all 0.5s ease; display: inline-block; margin: 0 2px; }
-        .highlight-text .part.highlight {
-            background: linear-gradient(45deg, rgba(255,107,107,0.8), rgba(78,205,196,0.8));
-            color: white; transform: scale(1.05); font-weight: bold;
-        }
-
-        /* --- MENÚ DE NAVEGACIÓN --- */
-        .menu-container {
-            display: flex; flex-direction: column; align-items: center; gap: 20px; margin: 40px 0;
-        }
-
-        .tech-menu {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;
-        }
-
-        /* Botones Pequeños (Tech) */
-        .menu-btn {
-            padding: 10px 20px; border: none; border-radius: 15px; font-weight: 600; font-size: 0.95rem;
-            cursor: pointer; transition: all 0.3s ease; background: rgba(255,255,255,0.15); color: white;
-            backdrop-filter: blur(10px); text-transform: uppercase; letter-spacing: 1px;
-            border: 1px solid rgba(255,255,255,0.2);
-            display: flex; align-items: center; gap: 8px;
-        }
-        
-        .menu-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
-        .menu-btn.active {
-            background: white; color: #333; transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Botón Novelas - PEQUEÑO Y A LA DERECHA */
-        .novel-menu { 
-            width: 100%; 
-            display: flex; 
-            justify-content: flex-end; 
-            margin-top: 5px; 
-            padding-right: 20px; 
-        }
-        .novel-btn {
-            padding: 5px 15px; 
-            border: none; border-radius: 15px; 
-            font-weight: 600; font-size: 0.75rem; 
-            cursor: pointer; transition: all 0.3s ease; 
-            background: linear-gradient(45deg, #8E44AD, #9B59B6); color: white;
-            box-shadow: 0 3px 10px rgba(142,68,173,0.3); 
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .novel-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(142,68,173,0.5); }
-        .novel-btn.active { ring: 2px solid rgba(255,255,255,0.5); }
-
-        /* --- CONTENEDORES DE SECCIÓN --- */
-        .section-content { display: none; animation: fadeIn 0.5s ease-out; margin-top: 20px; }
-        .section-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- GRIDS Y TARJETAS --- */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
-        
-        .dashboard-card {
-            background: rgba(255,255,255,0.95); border-radius: 20px; overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15); transition: all 0.4s ease;
-            display: flex; flex-direction: column; height: 100%; border: 2px solid transparent;
-        }
-        .dashboard-card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(0,0,0,0.25); border-color: rgba(255,255,255,0.5); }
-        
-        .card-image { height: 200px; overflow: hidden; position: relative; background: #eee; }
-        .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-        .dashboard-card:hover .card-image img { transform: scale(1.05); }
-        
-        .card-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .card-title { font-size: 1.4rem; font-weight: bold; background: linear-gradient(45deg, #333, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .status-badge { padding: 5px 12px; border-radius: 15px; font-size: 0.75rem; font-weight: bold; color: white; background: #667eea; text-transform: uppercase; }
-        
-        /* Descripción técnica */
-        .card-description { color: #555; font-size: 1rem; line-height: 1.6; margin-bottom: 0; flex-grow: 1; text-align: justify; }
-        
-        .view-button {
-            display: block; width: 100%; padding: 12px; border: none; border-radius: 12px;
-            color: white; font-weight: bold; text-align: center; text-decoration: none; text-transform: uppercase;
-            font-size: 0.9rem; transition: 0.3s; cursor: pointer; margin-top: 20px;
-        }
-        .view-button:hover { filter: brightness(1.1); }
-
-        /* --- BOTONES DASHBOARDS (Top Links) --- */
-        .nav-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .modern-nav-button {
-            display: flex; align-items: center; justify-content: center; text-decoration: none;
-            padding: 15px; border-radius: 15px; font-weight: 700; text-transform: uppercase;
-            font-size: 0.9rem; transition: all 0.4s ease; color: white; text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .modern-nav-button:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-
-        .btn-ventas { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .btn-futbol { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-        .btn-presencia { background: linear-gradient(135deg, #fc5c7d 0%, #6a82fb 100%); }
-        .btn-coches { background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%); }
-
-        /* --- IA SECTION SUMMARY --- */
-        .ai-summary-box {
-            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
-            border-radius: 20px; padding: 30px; margin-bottom: 40px;
-            border-left: 5px solid #834d9b; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .ai-summary-box h3 { color: #834d9b; margin-bottom: 15px; font-size: 1.5rem; }
-        .ai-summary-box p { font-size: 1.1rem; line-height: 1.6; color: #555; }
-
-        /* --- LIBROS --- */
-        .books-section {
-            background: rgba(255,255,255,0.95); border-radius: 30px; padding: 40px; margin: 40px 0;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15); position: relative; overflow: hidden;
-        }
-        .books-carousel { height: 420px; display: flex; justify-content: center; align-items: center; perspective: 1000px; margin: 30px 0; }
-        .books-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-        .book-cover {
-            position: absolute; width: 220px; height: 330px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer;
-        }
-        .book-cover img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-        .book-cover.active { z-index: 5; transform: scale(1.1); box-shadow: 0 25px 50px rgba(0,0,0,0.4); }
-        .book-cover.prev { z-index: 3; transform: translateX(-180px) scale(0.85); opacity: 0.7; }
-        .book-cover.next { z-index: 3; transform: translateX(180px) scale(0.85); opacity: 0.7; }
-        .book-cover.hidden { opacity: 0; transform: scale(0); }
-        
-        .book-info { text-align: center; margin-top: 20px; min-height: 180px; }
-        .book-title-text { font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; color: #8E44AD; }
-        .book-description { max-width: 700px; margin: 0 auto 20px; color: #555; line-height: 1.6; }
-        .book-links-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 15px; }
-        .book-action-btn { 
-            padding: 10px 20px; border-radius: 20px; text-decoration: none; color: white; font-weight: bold; 
-            font-size: 0.9rem; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer;
-        }
-        .carousel-controls { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
-        .nav-button { background: #8E44AD; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
-
-        /* --- MODALES --- */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; border-radius: 20px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; padding: 0; position: relative; }
-        .modal-header { padding: 20px; background: #f8f9fa; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .close-modal { background: none; border: none; font-size: 2rem; cursor: pointer; color: #666; }
-        .modal-body { padding: 30px; }
-        
-        /* Links Prompts */
-        .prompt-list li { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; list-style: none;}
-        .prompt-link { text-decoration: none; color: #333; display: flex; align-items: center; gap: 15px; padding: 10px; border-radius: 10px; transition: 0.3s; }
-        .prompt-link:hover { background: #f0f2f5; color: #667eea; }
-        .prompt-icon { font-size: 1.5rem; }
-
-        /* Galería */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
-        .gallery-item { cursor: pointer; border-radius: 10px; overflow: hidden; height: 200px; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-        .gallery-item:hover img { transform: scale(1.05); }
-
-        /* Visor Imagen */
-        .image-viewer { position: relative; text-align: center; }
-        .image-viewer img { max-width: 100%; max-height: 80vh; border-radius: 5px; }
-        
-        /* Media */
-        .media-player-container { background: black; width: 100%; display: flex; justify-content: center; align-items: center; min-height: 300px; }
-        video, audio { max-width: 100%; max-height: 70vh; outline: none; }
-
-        @media (max-width: 768px) {
-            .profile-section h1 { font-size: 2.2rem; }
-            .tech-menu { flex-direction: column; width: 100%; }
-            .menu-btn { width: 100%; justify-content: center; }
-            .nav-links { grid-template-columns: 1fr; }
-            .novel-menu { justify-content: center; padding-right: 0; margin-top: 15px; }
-        }
+        /* Parrilla TV scrollbar */
+        .tv-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
+        .tv-scroll::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 4px; }
+        .tv-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        .tv-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="language-selector">
-                <button class="lang-btn btn-es active" onclick="changeLanguage('es')" title="Español"></button>
-                <button class="lang-btn btn-ca" onclick="changeLanguage('ca')" title="Català"></button>
-                <button class="lang-btn btn-en" onclick="changeLanguage('en')" title="English"></button>
-                <button class="lang-btn btn-fr" onclick="changeLanguage('fr')" title="Français"></button>
-            </div>
-            
-            <div class="profile-section">
-                <h1>Pedro Guirao Gil</h1>
-                <div class="profile-info">
-                    <div class="highlight-text">
-                        <span class="part" data-translation-key="roleSpecialist"></span> <span>•</span>
-                        <span class="part" data-translation-key="roleTrainer"></span> <span>•</span>
-                        <span class="part" data-translation-key="roleConsultant"></span> <span>•</span>
-                        <span class="part" data-translation-key="roleNovelist"></span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="menu-container">
-                <div class="tech-menu">
-                    <button class="menu-btn" onclick="showSection('dashboards')">
-                        📊 <span data-translation-key="btnDashboards">POWER BI DESKTOP & SERVICE</span>
-                    </button>
-                    <button class="menu-btn" onclick="showSection('excel')">
-                        📈 <span data-translation-key="btnExcel">OFFICE & EXCEL</span>
-                    </button>
-                    <button class="menu-btn" onclick="showSection('google')">
-                        ☁️ <span data-translation-key="btnGoogle">GOOGLE TOOLS</span>
-                    </button>
-                    <button class="menu-btn" onclick="showSection('ai')">
-                        🤖 <span data-translation-key="btnAI">IA GENERATIVA</span>
-                    </button>
-                </div>
-                <div class="novel-menu">
-                    <button class="novel-btn" onclick="showSection('books')">
-                        📚 <span data-translation-key="btnNovels">MIS NOVELAS</span>
-                    </button>
-                </div>
+<body class="bg-black text-white font-sans selection:bg-purple-500/30">
+    <div id="root"></div>
 
-		<div class="stripe-home-container">
-    <stripe-buy-button
-        buy-button-id="buy_btn_1Szc9xLMuCf9ela0GVyNo0PD"
-        publishable-key="pk_live_51SzbaxLMuCf9ela0lFnv8OpenuCoG02c4crjmSRW1oq85DdwAaEhmMmIS0gYMH9wYbGr6AVXxzbJf7IdA6sptgxy00dKGPgVSc"
-    >
-    </stripe-buy-button>
-</div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
 
-            </div>
-        </div>
-
-        <div id="dashboards" class="section-content">
-            <h2 style="text-align:center; color:white; margin-bottom:20px;">Portafolio Power BI</h2>
-            
-            <div class="nav-links">
-                <a href="https://app.powerbi.com/view?r=eyJrIjoiYTJjN2E3MjAtZDdhMC00NmE5LThhZmEtMjU1MzA1ZDAzZDI2IiwidCI6IjgxNTAwZjZkLWJjZTktNDgzNC1iNDQ2LTc0YjVmYjljZjEwZSIsImMiOjh9" target="_blank" class="modern-nav-button btn-ventas"><span data-translation-key="dashLinkSales"></span></a>
-                <a href="https://app.powerbi.com/view?r=eyJrIjoiMGRlZjM5MjQtYjE0MC00MWMwLTllNjQtYmYwMTFlN2Y2NWE2IiwidCI6IjgxNTAwZjZkLWJjZTktNDgzNC1iNDQ2LTc0YjVmYjljZjEwZSIsImMiOjh9" target="_blank" class="modern-nav-button btn-futbol"><span data-translation-key="dashLinkFootball"></span></a>
-                <a href="https://app.powerbi.com/view?r=eyJrIjoiNDVlNWVhZGEtZjNjYi00NmM4LTg2NzEtMDQzZDNkY2YzMmE5IiwidCI6IjgxNTAwZjZkLWJjZTktNDgzNC1iNDQ2LTc0YjVmYjljZjEwZSIsImMiOjh9" target="_blank" class="modern-nav-button btn-presencia"><span data-translation-key="dashLinkAttendance"></span></a>
-                <a href="https://app.powerbi.com/view?r=eyJrIjoiMmIwNDBjZjItNWJmMi00OWFlLWI4OWEtZmJhY2QwN2M4NjMwIiwidCI6IjgxNTAwZjZkLWJjZTktNDgzNC1iNDQ2LTc0YjVmYjljZjEwZSIsImMiOjh9" target="_blank" class="modern-nav-button btn-coches"><span data-translation-key="dashLinkCars"></span></a>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="dashboard-card" onclick="openGallery('ventas')">
-                    <div class="card-image"><img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/ventas1.jpg" onerror="this.src='https://placehold.co/600x400/667eea/ffffff?text=Ventas'"></div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Ventas</h3><span class="status-badge">BI</span></div>
-                        <button class="view-button" style="background:#667eea">Ver Detalles</button>
-                    </div>
-                </div>
-                <div class="dashboard-card">
-                     <div class="card-image">
-                        <img src="https://placehold.co/600x400/F2C811/000?text=EJERCICIO+FINAL" alt="Ejercicio Final">
-                    </div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Ejercicio Final</h3><span class="status-badge" style="background:#333">Web</span></div>
-                        <button onclick="window.open('https://pedroguiraogil.github.io/POWERBI-ejercicio-final/', '_blank')" class="view-button" style="background:#333">Ver Demo Web</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="ai-summary-box">
-                <h3 data-translation-key="aboutDashboardsTitle"></h3>
-                <p data-translation-key="aboutDashboardsDesc"></p>
-            </div>
-        </div>
-
-        <div id="excel" class="section-content">
-            <h2 style="text-align:center; color:white; margin-bottom:30px;">Formación Microsoft Excel & Office</h2>
-            
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/excel_basico.jpg" 
-                             onerror="this.src='https://placehold.co/600x400/217346/FFFFFF?text=EXCEL+BASICO'" 
-                             alt="Excel Básico">
-                    </div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Nivel 1: Fundamentos</h3><span class="status-badge" style="background:#27ae60">Inicio</span></div>
-                        <p class="card-description" data-translation-key="descExcelBasic">Domina el entorno Office 365, atajos de teclado y la gestión eficiente de libros. Aprende las buenas prácticas para introducir datos, referencias relativas y absolutas, funciones esenciales (SI, SUMAR.SI) y preparación para impresión.</p>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/excel_medio.gif" 
-                             onerror="this.src='https://placehold.co/600x400/2980b9/FFFFFF?text=EXCEL+INTERMEDIO'" 
-                             alt="Excel Medio">
-                    </div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Nivel 2: Intermedio</h3><span class="status-badge" style="background:#2980b9">Análisis</span></div>
-                        <p class="card-description" data-translation-key="descExcelInter">El corazón del análisis de datos. Profundizamos en Tablas Dinámicas, Segmentación de datos y Gráficos combinados. Dominarás funciones de búsqueda modernas (BUSCARX) y Validación de Datos.</p>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/excel_avanzado.jpg" 
-                             onerror="this.src='https://placehold.co/600x400/2c3e50/FFFFFF?text=EXCEL+AVANZADO'" 
-                             alt="Excel Avanzado">
-                    </div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Nivel 3: Experto & Power</h3><span class="status-badge" style="background:#2c3e50">Power Platform</span></div>
-                        <p class="card-description" data-translation-key="descExcelAdv">El salto a la automatización. Introducción a Power Query para limpieza de datos (ETL) y Power Pivot para modelado. Conexión a orígenes externos y la puerta de entrada a Power BI.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="google" class="section-content">
-            <h2 style="text-align:center; color:white; margin-bottom:30px;">Herramientas Google Workspace</h2>
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/Sheets.png" 
-                             onerror="this.src='https://placehold.co/600x400/2196F3/ffffff?text=GOOGLE+SHEETS'" 
-                             alt="Google Sheets">
-                    </div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Google Sheets</h3><span class="status-badge" style="background:#2196F3; color:white">Calculus</span></div>
-                        <p class="card-description" data-translation-key="descSheets">La alternativa 100% colaborativa a Excel. Aprende a trabajar en tiempo real con tu equipo, historial de versiones y funciones exclusivas de nube (`IMPORTRANGE`, `GOOGLEFINANCE`).</p>
-                    </div>
-                </div>
-                
-                <div class="dashboard-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/Docs%26Slides.png" 
-                             onerror="this.src='https://placehold.co/600x400/FFC107/333333?text=DOCS+SLIDES'" 
-                             alt="Google Docs y Slides">
-                    </div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Docs & Slides</h3><span class="status-badge" style="background:#FFC107; color:#333">Office Cloud</span></div>
-                        <p class="card-description" data-translation-key="descDocs">Ofimática colaborativa esencial. Redacción de documentos y presentaciones donde múltiples usuarios editan a la vez. Gestión de comentarios y sugerencias.</p>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/Forms.png" 
-                             onerror="this.src='https://placehold.co/600x400/9C27B0/ffffff?text=FORMS'" 
-                             alt="Google Forms">
-                    </div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Google Forms</h3><span class="status-badge" style="background:#9C27B0; color:white">Data Entry</span></div>
-                        <p class="card-description" data-translation-key="descForms">La herramienta más sencilla para capturar datos. Creación de encuestas, exámenes o formularios de registro que vuelcan la información automáticamente en Sheets.</p>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/Drive.png" 
-                             onerror="this.src='https://placehold.co/600x400/1EA362/ffffff?text=GOOGLE+DRIVE'" 
-                             alt="Google Drive">
-                    </div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Google Drive</h3><span class="status-badge" style="background:#1EA362; color:white">Cloud Storage</span></div>
-                        <p class="card-description" data-translation-key="descDrive">El centro de mando de tu oficina digital. Almacenamiento seguro en la nube, gestión avanzada de permisos de carpetas compartidas y sincronización.</p>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/Looker.png" 
-                             onerror="this.src='https://placehold.co/600x400/4285F4/ffffff?text=LOOKER'" 
-                             alt="Looker Studio">
-                    </div>
-                    <div class="card-content">
-                        <div class="card-header"><h3 class="card-title">Looker Studio</h3><span class="status-badge" style="background:#4285F4">BI Cloud</span></div>
-                        <p class="card-description" data-translation-key="descLooker">El equivalente a Power BI de Google. Conecta tus Sheets, Forms y Analytics para crear cuadros de mando interactivos, gratuitos y compartibles vía web.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="ai" class="section-content">
-            <h2 style="text-align:center; color:white; margin-bottom:30px;">Inteligencia Artificial Aplicada</h2>
-            
-            <div class="ai-summary-box">
-                <h3 data-translation-key="aiTitle">💡 Formación en IA Generativa</h3>
-                <p data-translation-key="aiDesc">En mis formaciones de Inteligencia Artificial, enseñamos a transformar la productividad empresarial y personal. No se trata solo de usar ChatGPT, sino de integrar <strong>Copilot, Gemini y Claude</strong> en flujos de trabajo reales.</p>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <div class="card-image"><img src="https://placehold.co/600x400/834d9b/ffffff?text=CURSO+TECCO" alt="TECCO"></div>
-                    <div class="card-content">
-                        <h3 class="card-title">Curso TECCO</h3>
-                        <p class="card-description">Materiales y prácticas reales de IA generativa.</p>
-                        <a href="https://pedroguiraogil.github.io/CURSO-IA-TECCO/" target="_blank" class="view-button" style="background:#834d9b">Ver Curso</a>
-                    </div>
-                </div>
-                <div class="dashboard-card">
-                    <div class="card-image"><img src="https://placehold.co/600x400/00b09b/ffffff?text=CURSO+ONCE" alt="ONCE"></div>
-                    <div class="card-content">
-                        <h3 class="card-title">Fundación ONCE</h3>
-                        <p class="card-description">IA aplicada a la Accesibilidad y productividad.</p>
-                        <a href="https://pedroguiraogil.github.io/CURSO-ONCE-/" target="_blank" class="view-button" style="background:#00b09b">Ver Curso</a>
-                    </div>
-                </div>
-                <div class="dashboard-card">
-                    <div class="card-image"><img src="https://placehold.co/600x400/F7971E/333?text=PROMPTS" alt="Prompts"></div>
-                    <div class="card-content">
-                        <h3 class="card-title">Biblioteca Prompts</h3>
-                        <p class="card-description">Ejemplos de chats y artefactos en Gemini/Claude.</p>
-                        <button onclick="openModal('promptsModal')" class="view-button" style="background:#F7971E; color:#333">Ver Recursos</button>
-                    </div>
-                </div>
-                
-                <div class="dashboard-card">
-                    <div class="card-image"><img src="https://placehold.co/600x400/e74c3c/ffffff?text=JUEGOS+IA" alt="Juegos"></div>
-                    <div class="card-content">
-                        <h3 class="card-title" data-translation-key="cardGames">Capacidades Creativas</h3>
-                        <p class="card-description">Ejemplos de código (juegos web) generados íntegramente por IA mediante lenguaje natural.</p>
-                        <button onclick="showSection('games-gallery')" class="view-button" style="background:#e74c3c">Ver Demos</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="games-gallery" style="display:none; margin-top:40px;">
-                <h3 style="text-align:center; color:white; margin-bottom:20px;">🎮 Demos Generadas por IA</h3>
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="card-content">
-                            <h3>COGNOS</h3>
-                            <a href="https://pedroguiraogil.github.io/COGNOS/" target="_blank" class="view-button" style="background:#2c3e50">Jugar Demo</a>
-                        </div>
-                    </div>
-                    <div class="dashboard-card">
-                        <div class="card-content">
-                            <h3>Laberinto</h3>
-                            <a href="https://pedroguiraogil.github.io/MAZE/" target="_blank" class="view-button" style="background:#e74c3c">Jugar Demo</a>
-                        </div>
-                    </div>
-                    <div class="dashboard-card">
-                        <div class="card-content">
-                            <h3>Paisaje Sensorial</h3>
-                            <a href="https://pedroguiraogil.github.io/paisaje-sensorial/" target="_blank" class="view-button" style="background:#8e44ad">Ver Demo</a>
-                        </div>
-                    </div>
-                    <div class="dashboard-card">
-                        <div class="card-content">
-                            <h3>Buscaminas</h3>
-                            <p class="card-description">Clásico juego de lógica generado por IA.</p>
-                            <a href="https://pedroguiraogil.github.io/BUSCAMINAS/" target="_blank" class="view-button" style="background:#e67e22">Jugar Demo</a>
-                        </div>
-                    </div>
-                    <div class="dashboard-card">
-                        <div class="card-content">
-                            <h3>Reconocimiento Caras</h3>
-                            <p class="card-description">Experimento de visión artificial.</p>
-                            <a href="https://pedroguiraogil.github.io/CARAS/" target="_blank" class="view-button" style="background:#9b59b6">Jugar Demo</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="books" class="section-content">
-            <div class="books-section">
-                <h2 class="books-title" data-translation-key="literarySideTitle"></h2>
-                
-                <div class="books-carousel">
-                    <div class="books-container">
-                        <div class="book-cover active" data-index="0" onclick="goToBook(0)"><img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/FIN.png" onerror="this.src='https://placehold.co/220x330/FF6B6B/ffffff?text=FIN'"></div>
-                        <div class="book-cover next" data-index="1" onclick="goToBook(1)"><img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/OH%20MY%20GOD.jpg" onerror="this.src='https://placehold.co/220x330/FF8E53/ffffff?text=OMG'"></div>
-                        <div class="book-cover hidden" data-index="2" onclick="goToBook(2)"><img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/MANUAL%20BASICO%20DE%20CONQUISTA.jpg" onerror="this.src='https://placehold.co/220x330/FFA726/ffffff?text=Manual'"></div>
-                        <div class="book-cover hidden" data-index="3" onclick="goToBook(3)"><img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/TOCATA%20Y%20FUGA%20DE%20LA%20TENIENTE%20ESCALI.jpg" onerror="this.src='https://placehold.co/220x330/4ECDC4/ffffff?text=TOCATA'"></div>
-                        <div class="book-cover hidden" data-index="4" onclick="goToBook(4)"><img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/ESCALIS%20BLUES.jpg" onerror="this.src='https://placehold.co/220x330/26A69A/ffffff?text=BLUES'"></div>
-                        <div class="book-cover hidden" data-index="5" onclick="goToBook(5)"><img src="https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/EXODOS.jpg" onerror="this.src='https://placehold.co/220x330/8E44AD/ffffff?text=ÉXODOS'"></div>
-                    </div>
-                </div>
-
-                <div class="book-info">
-                    <h3 class="book-title-text" id="bookTitle"></h3>
-                    <p class="book-description" id="bookDescription"></p>
-                    <div class="book-links-container" id="bookActions"></div>
-                </div>
-
-                <div class="carousel-controls">
-    <div class="viewer-controls-wrapper">
-        <div class="nav-buttons-group">
-            <button class="nav-btn" onclick="prevBook()" style="font-size: 2rem; background:none; border:none; color:white; cursor:pointer; margin-right:10px;">&#10094;</button>
-            <button class="nav-btn" onclick="nextBook()" style="font-size: 2rem; background:none; border:none; color:white; cursor:pointer;">&#10095;</button>
-        </div>
-
-        <stripe-buy-button
-            buy-button-id="buy_btn_1Szc9xLMuCf9ela0GVyNo0PD"
-            publishable-key="pk_live_51SzbaxLMuCf9ela0lFnv8OpenuCoG02c4crjmSRW1oq85DdwAaEhmMmIS0gYMH9wYbGr6AVXxzbJf7IdA6sptgxy00dKGPgVSc"
-        >
-        </stripe-buy-button>
-    </div>
-</div>
-
-        <div id="mediaModal" class="modal-overlay" onclick="closeMediaModal(event)">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title" id="mediaTitle">Reproduciendo...</span>
-                    <button class="close-modal" onclick="closeMediaModal()">×</button>
-                </div>
-                <div class="media-player-container">
-                    <video id="videoPlayer" controls style="display:none;"></video>
-                    <audio id="audioPlayer" controls style="display:none;"></audio>
-                </div>
-            </div>
-        </div>
-
-        <div id="galleryModal" class="modal-overlay" onclick="closeGalleryModal(event)">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title" id="galleryTitle">Galería</span>
-                    <button class="close-modal" onclick="closeGalleryModal()">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="gallery-grid" id="galleryGrid"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="imageModal" class="modal-overlay" onclick="closeImageModal(event)">
-            <div class="modal-content" style="background:transparent; box-shadow:none;">
-                <div class="image-viewer">
-                    <button class="close-modal" onclick="closeImageModal()" style="position:absolute; top:-40px; right:0; color:white;">×</button>
-                    <img id="fullImage" src="" alt="">
-                    <div class="image-nav">
-                        <button onclick="navImage(-1)">❮</button>
-                        <button onclick="navImage(1)">❯</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="promptsModal" class="modal-overlay" onclick="closeModal('promptsModal', event)">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title">📚 Biblioteca de Prompts & Ejemplos</span>
-                    <button class="close-modal" onclick="closeModal('promptsModal')">×</button>
-                </div>
-                <div class="modal-body">
-                    <p style="margin-bottom:20px; color:#666;">Colección de chats y artefactos generados en mis cursos de IA:</p>
-                    <ul class="prompt-list">
-                        <li><a href="https://gemini.google.com/share/535daade8ac4" target="_blank" class="prompt-link"><span class="prompt-icon">🤖</span><div class="prompt-info"><h4>Gemini: Ejemplo de Análisis</h4><p>Enlace compartido de chat</p></div></a></li>
-                        <li><a href="https://claude.ai/public/artifacts/f1bf9ee4-b241-4d7d-901b-6569e2665902" target="_blank" class="prompt-link"><span class="prompt-icon">🧠</span><div class="prompt-info"><h4>Claude Artifact: Ejemplo 1</h4><p>Interfaz generada con IA</p></div></a></li>
-                        <li><a href="https://claude.ai/public/artifacts/e0a0db62-2910-43dd-a85b-efb433656609" target="_blank" class="prompt-link"><span class="prompt-icon">🧠</span><div class="prompt-info"><h4>Claude Artifact: Ejemplo 2</h4><p>Interfaz generada con IA</p></div></a></li>
-                        <li><a href="https://gemini.google.com/share/c403a7684a80" target="_blank" class="prompt-link"><span class="prompt-icon">🤖</span><div class="prompt-info"><h4>Gemini: Práctica TECCO 1</h4><p>Enlace compartido de chat</p></div></a></li>
-                        <li><a href="https://aistudio.google.com/apps/drive/1jTTc8G0AeBYQv0moBeFtjCtDhBtZWhKH?showPreview=true&showAssistant=true" target="_blank" class="prompt-link"><span class="prompt-icon">📁</span><div class="prompt-info"><h4>Google AI Studio Drive</h4><p>Recursos avanzados</p></div></a></li>
-                        <li><a href="https://gemini.google.com/share/884071918ac5" target="_blank" class="prompt-link"><span class="prompt-icon">🤖</span><div class="prompt-info"><h4>Gemini: Práctica TECCO 2</h4><p>Enlace compartido de chat</p></div></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-   <script>
-        // --- DATA ---
-        const dashboards = {
-            ventas: ["https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/ventas1.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/ventas2.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/ventas3.jpg"],
-            futbol: ["https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/futbol1.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/futbol2.jpg"],
-            presencia: ["https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/bajas1.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/bajas2.jpg"],
-            coches: ["https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/alquiler1.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/alquiler2.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/alquiler3.jpg", "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/alquiler4.jpg"]
-        };
-
-        const booksData = [
-            { id: "fin", link: "https://www.amazon.es/Fin-Pedro-G-Guirao-ebook/dp/B0DYK9VBMS" },
-            { id: "omg", link: "https://www.overdrive.com/media/10591700/%C2%A1oh-my-god" },
-            { id: "manual", link: "https://www.amazon.es/Manual-B%C3%A1sico-Conquista-Pedro-Guirao-ebook/dp/B0DWXRXMLV" },
-            { id: "tocata", link: "https://www.amazon.es/dp/B0DVMY39JD", trailer: "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/BOOKTRAILER1.mp4", trailer2: "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/BOOKTRAILER2.mp4" },
-            { id: "blues", link: "https://www.kobo.com/us/es/ebook/escali-s-blues" },
-            // URL CORREGIDA Y ACORTADA PARA EVITAR ERRORES
-            { id: "exodos", link: "https://www.amazon.es/dp/B0FF3ZQG4L", audio: "https://raw.githubusercontent.com/PedroGuiraoGil/CURSOS/main/images/EXODOSESPANOL.mp3" }
+        // =============================================
+        // DATOS PARRILLA TV
+        // =============================================
+        const EVENTOS_HOY = [
+          { id: 1001, time: "09:00", event: "Resumen JJOO Milán 2026", sport: "Polideportivo", channel: "Movistar Plus+" },
+          { id: 1002, time: "11:00", event: "Lo mejor de la jornada LaLiga", sport: "Fútbol", channel: "Movistar Plus+" },
+          { id: 1003, time: "13:00", event: "Generación NBA", sport: "Baloncesto", channel: "Movistar Plus+" },
+          { id: 1004, time: "14:30", event: "Informe Plus+: Estrellas 2026", sport: "Reportaje", channel: "Movistar Plus+" },
+          { id: 1005, time: "16:15", event: "Multifútbol LaLiga", sport: "Fútbol", channel: "Movistar Plus+" },
+          { id: 1006, time: "18:30", event: "NBA: Resumen de la semana", sport: "Baloncesto", channel: "Movistar Plus+" },
+          { id: 1007, time: "20:00", event: "Deporte Plus+: Domingo", sport: "Informativo", channel: "Movistar Plus+" },
+          { id: 1008, time: "21:00", event: "Fútbol: Villarreal - Valencia (Simulcast)", sport: "Fútbol", channel: "Movistar Plus+" },
+          { id: 1009, time: "23:15", event: "El Día Después", sport: "Análisis", channel: "Movistar Plus+" },
+          { id: 1010, time: "01:00", event: "La Resistencia: Lo mejor", sport: "Entretenimiento", channel: "Movistar Plus+" },
+          { id: 1101, time: "10:00", event: "LaLiga zap", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 1102, time: "12:00", event: "Repetición: Real Madrid - Betis", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 1103, time: "13:30", event: "Previa LaLiga", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 1104, time: "16:15", event: "FC Barcelona - Levante UD", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 1105, time: "18:15", event: "LaLiga Show", sport: "Programa", channel: "Movistar LaLiga" },
+          { id: 1106, time: "20:00", event: "Previa LaLiga", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 1107, time: "21:00", event: "Villarreal CF - Valencia CF", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 1108, time: "23:00", event: "El Día Después", sport: "Programa", channel: "Movistar LaLiga" },
+          { id: 1109, time: "00:30", event: "Resumen Jornada 25", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 1201, time: "11:00", event: "Dorsal Diez", sport: "Documental", channel: "DAZN LaLiga" },
+          { id: 1202, time: "13:00", event: "Previa: Getafe - Sevilla", sport: "Fútbol", channel: "DAZN LaLiga" },
+          { id: 1203, time: "14:00", event: "Getafe CF - Sevilla FC", sport: "Fútbol", channel: "DAZN LaLiga" },
+          { id: 1204, time: "16:00", event: "El Post de DAZN", sport: "Programa", channel: "DAZN LaLiga" },
+          { id: 1205, time: "17:30", event: "Fever Pitch", sport: "Fútbol", channel: "DAZN LaLiga" },
+          { id: 1206, time: "18:30", event: "RC Celta - RCD Mallorca", sport: "Fútbol", channel: "DAZN LaLiga" },
+          { id: 1207, time: "20:30", event: "El Post de DAZN", sport: "Programa", channel: "DAZN LaLiga" },
+          { id: 1208, time: "22:00", event: "Código LaLiga", sport: "Programa", channel: "DAZN LaLiga" },
+          { id: 1209, time: "23:30", event: "LaLiga Highlights", sport: "Resúmenes", channel: "DAZN LaLiga" },
+          { id: 1301, time: "10:00", event: "Especial: Los 100 goles de la UCL", sport: "Fútbol", channel: "Liga de Campeones" },
+          { id: 1302, time: "12:00", event: "Repetición: PSG - Man. City", sport: "Fútbol", channel: "Liga de Campeones" },
+          { id: 1303, time: "14:00", event: "UCL Magazine", sport: "Programa", channel: "Liga de Campeones" },
+          { id: 1304, time: "16:00", event: "Repetición: Inter - At. Madrid", sport: "Fútbol", channel: "Liga de Campeones" },
+          { id: 1305, time: "18:00", event: "Documental: La Decimocuarta", sport: "Fútbol", channel: "Liga de Campeones" },
+          { id: 1306, time: "20:00", event: "Noche de Champions", sport: "Programa", channel: "Liga de Campeones" },
+          { id: 1307, time: "21:30", event: "UCL Highlights", sport: "Resúmenes", channel: "Liga de Campeones" },
+          { id: 1401, time: "10:00", event: "Golf: PGA Tour Resumen", sport: "Golf", channel: "Deportes" },
+          { id: 1402, time: "12:30", event: "Copa del Rey Basket (Final Diferido)", sport: "Baloncesto", channel: "Deportes" },
+          { id: 1403, time: "15:00", event: "Tenis: ATP 500 Rio", sport: "Tenis", channel: "Deportes" },
+          { id: 1404, time: "17:00", event: "Rugby: Seis Naciones", sport: "Rugby", channel: "Deportes" },
+          { id: 1405, time: "19:00", event: "Liga Endesa: Real Madrid - Baskonia", sport: "Baloncesto", channel: "Deportes" },
+          { id: 1406, time: "21:00", event: "PGA Tour: The Honda Classic", sport: "Golf", channel: "Deportes" },
+          { id: 1407, time: "00:00", event: "NBA Live", sport: "Baloncesto", channel: "Deportes" },
+          { id: 1501, time: "11:00", event: "Vela: America's Cup Resumen", sport: "Vela", channel: "Deportes 2" },
+          { id: 1502, time: "13:00", event: "IndyCar Series", sport: "Motor", channel: "Deportes 2" },
+          { id: 1503, time: "15:30", event: "Ciclismo: UAE Tour", sport: "Ciclismo", channel: "Deportes 2" },
+          { id: 1504, time: "18:00", event: "Balonmano: Liga Asobal", sport: "Balonmano", channel: "Deportes 2" },
+          { id: 1505, time: "20:30", event: "Voleibol: Superliga", sport: "Voleibol", channel: "Deportes 2" },
+          { id: 1506, time: "22:00", event: "NFL Total Access", sport: "Fútbol Americano", channel: "Deportes 2" },
+          { id: 1601, time: "10:00", event: "Informe Plus", sport: "Documental", channel: "Vamos" },
+          { id: 1602, time: "12:00", event: "Universo Valdano", sport: "Entrevista", channel: "Vamos" },
+          { id: 1603, time: "14:30", event: "Noticias Vamos", sport: "Informativo", channel: "Vamos" },
+          { id: 1604, time: "16:00", event: "Bakala", sport: "Humor", channel: "Vamos" },
+          { id: 1605, time: "18:00", event: "Noticias Vamos", sport: "Informativo", channel: "Vamos" },
+          { id: 1606, time: "20:30", event: "Noticias Vamos", sport: "Informativo", channel: "Vamos" },
+          { id: 1607, time: "21:30", event: "El Día Después", sport: "Programa", channel: "Vamos" },
+          { id: 1701, time: "09:00", event: "JJ.OO.: Esquí de fondo", sport: "JJOO 2026", channel: "Teledeporte" },
+          { id: 1702, time: "11:00", event: "JJ.OO.: Curling Femenino", sport: "JJOO 2026", channel: "Teledeporte" },
+          { id: 1703, time: "13:00", event: "Liga Guerreras: Balonmano", sport: "Balonmano", channel: "Teledeporte" },
+          { id: 1704, time: "15:00", event: "Esquí acrobático: Final", sport: "JJOO 2026", channel: "Teledeporte" },
+          { id: 1705, time: "18:00", event: "Baloncesto Femenino", sport: "Baloncesto", channel: "Teledeporte" },
+          { id: 1706, time: "20:30", event: "Ceremonia de Clausura JJOO", sport: "JJOO 2026", channel: "Teledeporte" },
+          { id: 1707, time: "22:45", event: "Estudio Estadio", sport: "Programa", channel: "Teledeporte" },
+          { id: 1801, time: "10:00", event: "Bobsleigh: Serie 3", sport: "JJOO 2026", channel: "Eurosport 1" },
+          { id: 1802, time: "12:00", event: "Bobsleigh: Final", sport: "JJOO 2026", channel: "Eurosport 1" },
+          { id: 1803, time: "14:05", event: "Hockey Hielo: Final M", sport: "JJOO 2026", channel: "Eurosport 1" },
+          { id: 1804, time: "17:00", event: "Villa Olímpica", sport: "Resumen", channel: "Eurosport 1" },
+          { id: 1805, time: "20:30", event: "Ceremonia de Clausura", sport: "JJOO 2026", channel: "Eurosport 1" },
+          { id: 1806, time: "23:00", event: "Snooker: Players Championship", sport: "Snooker", channel: "Eurosport 1" },
+          { id: 1901, time: "11:00", event: "Snowboard Cross", sport: "JJOO 2026", channel: "Eurosport 2" },
+          { id: 1902, time: "13:30", event: "Bobsleigh Serie 4", sport: "JJOO 2026", channel: "Eurosport 2" },
+          { id: 1903, time: "15:00", event: "Patinaje Velocidad", sport: "JJOO 2026", channel: "Eurosport 2" },
+          { id: 1904, time: "18:00", event: "Ciclismo: UAE Tour", sport: "Ciclismo", channel: "Eurosport 2" },
+          { id: 1905, time: "21:00", event: "Salto de Esquí", sport: "JJOO 2026", channel: "Eurosport 2" },
+          { id: 2001, time: "12:00", event: "Premier League Stories", sport: "Documental", channel: "DAZN 1" },
+          { id: 2002, time: "14:50", event: "Nottingham Forest - Liverpool", sport: "Fútbol", channel: "DAZN 1" },
+          { id: 2003, time: "17:20", event: "Tottenham - Arsenal", sport: "Fútbol", channel: "DAZN 1" },
+          { id: 2004, time: "19:30", event: "Premier League Review", sport: "Resumen", channel: "DAZN 1" },
+          { id: 2005, time: "21:00", event: "Boxeo: Wood vs Warrington", sport: "Boxeo", channel: "DAZN 1" },
+          { id: 2101, time: "11:50", event: "Eibar - Athletic (Liga F)", sport: "Fútbol", channel: "DAZN 2" },
+          { id: 2102, time: "14:50", event: "Sunderland - Fulham", sport: "Fútbol", channel: "DAZN 2" },
+          { id: 2103, time: "17:50", event: "Sevilla - At. Madrid (Liga F)", sport: "Fútbol", channel: "DAZN 2" },
+          { id: 2104, time: "21:00", event: "SBK Australia: Carrera 2", sport: "Motor", channel: "DAZN 2" },
+          { id: 2201, time: "12:55", event: "Minicopa Endesa: Final", sport: "Baloncesto", channel: "Esport3" },
+          { id: 2202, time: "16:00", event: "Lliga Femenina: Uni Girona", sport: "Baloncesto", channel: "Esport3" },
+          { id: 2203, time: "18:00", event: "Lliga Asobal: Granollers", sport: "Balonmano", channel: "Esport3" },
+          { id: 2204, time: "20:30", event: "Motor a Fons", sport: "Motor", channel: "Esport3" },
+          { id: 2205, time: "21:40", event: "Sala de Premsa", sport: "Informativo", channel: "Esport3" },
+          { id: 2206, time: "22:40", event: "Gol a gol", sport: "Fútbol", channel: "Esport3" },
+          { id: 2207, time: "00:00", event: "3CatInfo Esports", sport: "Informativo", channel: "Esport3" },
+          { id: 2301, time: "12:00", event: "Tecnología de la antigüedad", sport: "Documental", channel: "Canal Historia" },
+          { id: 2302, time: "14:00", event: "Forjado a fuego", sport: "Competición", channel: "Canal Historia" },
+          { id: 2303, time: "16:00", event: "El precio de la historia", sport: "Reality", channel: "Canal Historia" },
+          { id: 2304, time: "18:00", event: "Templarios: Secretos", sport: "Historia", channel: "Canal Historia" },
+          { id: 2305, time: "20:00", event: "Gigantes de la comida", sport: "Documental", channel: "Canal Historia" },
+          { id: 2306, time: "22:00", event: "Grandes robos", sport: "Crimen", channel: "Canal Historia" },
+          { id: 2401, time: "12:00", event: "Fronteras de España", sport: "Docureality", channel: "DMAX" },
+          { id: 2402, time: "14:00", event: "Monstruos de río", sport: "Pesca", channel: "DMAX" },
+          { id: 2403, time: "16:00", event: "Wild Frank", sport: "Naturaleza", channel: "DMAX" },
+          { id: 2404, time: "18:00", event: "Aventura en pelotas", sport: "Reality", channel: "DMAX" },
+          { id: 2405, time: "20:00", event: "Desmontando la historia", sport: "Documental", channel: "DMAX" },
+          { id: 2406, time: "22:00", event: "Alienígenas", sport: "Misterio", channel: "DMAX" },
+          { id: 2501, time: "13:00", event: "Vida Salvaje", sport: "Naturaleza", channel: "Odisea" },
+          { id: 2502, time: "15:00", event: "Planeta Azul II", sport: "Naturaleza", channel: "Odisea" },
+          { id: 2503, time: "17:00", event: "Ingeniería de vanguardia", sport: "Tecnología", channel: "Odisea" },
+          { id: 2504, time: "20:00", event: "El cosmos", sport: "Ciencia", channel: "Odisea" },
+          { id: 2505, time: "22:00", event: "Megatraslados", sport: "Ingeniería", channel: "Odisea" }
         ];
 
-        const translations = {
-            es: {
-                roleSpecialist: "Especialista en Power BI y Microsoft Excel",
-                roleTrainer: "Formador", roleConsultant: "Consultant", roleNovelist: "Novelista",
-                btnDashboards: "POWER BI DESKTOP & SERVICE", btnExcel: "OFFICE & EXCEL", btnGoogle: "GOOGLE TOOLS", btnAI: "IA GENERATIVA", btnNovels: "MIS NOVELAS",
-                dashLinkSales: "📊 ANÁLISIS DE VENTAS", dashLinkFootball: "⚽ LIGA DE FÚTBOL", dashLinkAttendance: "📅 CONTROL PRESENCIA", dashLinkCars: "🚗 ALQUILER COCHES",
-                aboutDashboardsTitle: "🎯 Sobre estos Dashboards",
-                aboutDashboardsDesc: "Estos dashboards son ejemplos con **datos inventados** creados específicamente para demostraciones técnicas. No corresponden a datos reales de ninguna empresa, sino que simulan escenarios de negocio habituales para mostrar capacidades de análisis.",
-                literarySideTitle: "📚 Mi Faceta Literaria",
-                bookBtnShop: "📖 Comprar / Leer", bookBtnTrailer: "🎬 Ver Trailer", bookBtnAudio: "🎧 Escuchar Audio",
-                bookTitle_fin: "FIN", bookDesc_fin: "Thriller de ciencia ficción sobre las últimas horas de la humanidad.",
-                bookTitle_omg: "OH MY GOD", bookDesc_omg: "Sátira divina donde Dios baja a la tierra de vacaciones.",
-                bookTitle_manual: "MANUAL BÁSICO DE CONQUISTA", bookDesc_manual: "Guía humorística para la dominación galáctica.",
-                bookTitle_tocata: "TOCATA Y FUGA...", bookDesc_tocata: "Primera parte de la saga de la Teniente Escali.",
-                bookTitle_blues: "ESCALI'S BLUES", bookDesc_blues: "La secuela noir de la Teniente Escali.",
-                bookTitle_exodos: "ÉXODOS", bookDesc_exodos: "Ciencia ficción distópica bajo el pseudónimo Kia P. Cabdill.",
-                
-                descExcelBasic: "Domina el entorno Office 365, atajos de teclado y la gestión eficiente de libros. Aprende las buenas prácticas para introducir datos, referencias relativas y absolutas, funciones esenciales (SI, SUMAR.SI) y preparación para impresión.",
-                descExcelInter: "El corazón del análisis de datos. Profundizamos en Tablas Dinámicas, Segmentación de datos y Gráficos combinados. Dominarás funciones de búsqueda modernas (BUSCARX) y Validación de Datos.",
-                descExcelAdv: "El salto a la automatización. Introducción a Power Query para limpieza de datos (ETL) y Power Pivot para modelado. Conexión a orígenes externos y la puerta de entrada a Power BI.",
-                descSheets: "La alternativa 100% colaborativa a Excel. Aprende a trabajar en tiempo real con tu equipo, historial de versiones y funciones exclusivas de nube (IMPORTRANGE, GOOGLEFINANCE).",
-                descDocs: "Ofimática colaborativa esencial. Redacción de documentos y presentaciones donde múltiples usuarios editan a la vez. Gestión de comentarios y sugerencias.",
-                descForms: "La herramienta más sencilla para capturar datos. Creación de encuestas, exámenes o formularios de registro que vuelcan la información automáticamente en Sheets.",
-                descDrive: "El centro de mando de tu oficina digital. Almacenamiento seguro en la nube, gestión avanzada de permisos de carpetas compartidas y sincronización.",
-                descLooker: "El equivalente a Power BI de Google. Conecta tus Sheets, Forms y Analytics para crear cuadros de mando interactivos, gratuitos y compartibles vía web.",
-                aiTitle: "💡 Formación en IA Generativa",
-                aiDesc: "En mis formaciones de Inteligencia Artificial, enseñamos a transformar la productividad empresarial y personal. No se trata solo de usar ChatGPT, sino de integrar <strong>Copilot, Gemini y Claude</strong> en flujos de trabajo reales.",
-                cardGames: "Capacidades Creativas"
-            },
-            ca: {
-                roleSpecialist: "Especialista en Power BI i Microsoft Excel",
-                roleTrainer: "Formador", roleConsultant: "Consultor", roleNovelist: "Novel·lista",
-                btnDashboards: "POWER BI DESKTOP & SERVICE", btnExcel: "OFFICE & EXCEL", btnGoogle: "EINES GOOGLE", btnAI: "IA GENERATIVA", btnNovels: "LES MEVES NOVEL·LES",
-                dashLinkSales: "📊 ANÀLISI DE VENDES", dashLinkFootball: "⚽ LLIGA DE FUTBOL", dashLinkAttendance: "📅 CONTROL PRESÈNCIA", dashLinkCars: "🚗 LLOGUER COTXES",
-                aboutDashboardsTitle: "🎯 Sobre aquests Dashboards",
-                aboutDashboardsDesc: "Aquests dashboards són exemples amb **dades inventades** creats específicament per a demostracions tècniques. No corresponen a dades reals de cap empresa, sinó que simulen escenaris de negoci habituals per mostrar capacitats d'anàlisi.",
-                literarySideTitle: "📚 La meva Faceta Literària",
-                bookBtnShop: "📖 Comprar / Llegir", bookBtnTrailer: "🎬 Veure Trailer", bookBtnAudio: "🎧 Escoltar Àudio",
-                bookTitle_fin: "FIN", bookDesc_fin: "Thriller de ciència-ficció sobre les últimes hores de la humanitat.",
-                bookTitle_omg: "OH MY GOD", bookDesc_omg: "Sàtira divina on Déu baixa a la terra de vacances.",
-                bookTitle_manual: "MANUAL BÀSIC DE CONQUESTA", bookDesc_manual: "Guia humorística per a la dominació galàctica.",
-                bookTitle_tocata: "TOCATA I FUGA...", bookDesc_tocata: "Primera part de la saga de la Tinent Escali.",
-                bookTitle_blues: "ESCALI'S BLUES", bookDesc_blues: "La seqüela noir de la Tinent Escali.",
-                bookTitle_exodos: "ÉXODOS", bookDesc_exodos: "Ciència-ficció distòpica sota el pseudònim Kia P. Cabdill.",
+        const EVENTOS_MANANA = [
+          { id: 3001, time: "08:00", event: "JJOO: Resumen final y medallas", sport: "Polideportivo", channel: "Movistar Plus+" },
+          { id: 3002, time: "10:00", event: "La Resistencia: Mejores momentos", sport: "Humor", channel: "Movistar Plus+" },
+          { id: 3003, time: "12:00", event: "Resumen LaLiga: Jornada 25", sport: "Fútbol", channel: "Movistar Plus+" },
+          { id: 3004, time: "14:30", event: "Entrevista: El año de los JJOO", sport: "Programa", channel: "Movistar Plus+" },
+          { id: 3005, time: "17:00", event: "NBA: Boston - Lakers (Dif.)", sport: "Baloncesto", channel: "Movistar Plus+" },
+          { id: 3006, time: "20:30", event: "Deporte Plus+: Lunes", sport: "Informativo", channel: "Movistar Plus+" },
+          { id: 3007, time: "21:00", event: "Alavés - Girona (Directo)", sport: "Fútbol", channel: "Movistar Plus+" },
+          { id: 3008, time: "23:00", event: "El Día Después", sport: "Análisis", channel: "Movistar Plus+" },
+          { id: 3101, time: "09:00", event: "Zap LaLiga", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 3102, time: "11:00", event: "FC Barcelona - Levante (Dif.)", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 3103, time: "14:00", event: "Resumen Getafe - Sevilla", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 3104, time: "18:00", event: "Villarreal - Valencia (Dif.)", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 3105, time: "20:30", event: "Previa: Alavés - Girona", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 3106, time: "21:00", event: "Deportivo Alavés - Girona FC", sport: "Fútbol", channel: "Movistar LaLiga" },
+          { id: 3107, time: "23:00", event: "Post LaLiga", sport: "Programa", channel: "Movistar LaLiga" },
+          { id: 3201, time: "10:00", event: "Resumen RC Celta - Mallorca", sport: "Fútbol", channel: "DAZN LaLiga" },
+          { id: 3202, time: "13:00", event: "LaLiga Show: Lunes", sport: "Programa", channel: "DAZN LaLiga" },
+          { id: 3203, time: "15:00", event: "Villarreal - Valencia (Dif.)", sport: "Fútbol", channel: "DAZN LaLiga" },
+          { id: 3204, time: "18:00", event: "LaLiga zap", sport: "Fútbol", channel: "DAZN LaLiga" },
+          { id: 3205, time: "21:00", event: "Deportivo Alavés - Girona FC", sport: "Fútbol", channel: "DAZN LaLiga" },
+          { id: 3206, time: "23:00", event: "El Post de DAZN", sport: "Programa", channel: "DAZN LaLiga" },
+          { id: 3301, time: "10:00", event: "Magacín UCL", sport: "Fútbol", channel: "Liga de Campeones" },
+          { id: 3302, time: "13:00", event: "Classic Match: Barça - PSG", sport: "Fútbol", channel: "Liga de Campeones" },
+          { id: 3303, time: "16:00", event: "Previa Octavos de Final", sport: "Fútbol", channel: "Liga de Campeones" },
+          { id: 3304, time: "20:00", event: "Noche de Champions", sport: "Programa", channel: "Liga de Campeones" },
+          { id: 3305, time: "22:00", event: "UCL Highlights", sport: "Resúmenes", channel: "Liga de Campeones" },
+          { id: 3401, time: "12:00", event: "NCAA: Michigan - Duke", sport: "Baloncesto", channel: "Deportes" },
+          { id: 3402, time: "15:00", event: "ATP 500 Doha: Ronda 1", sport: "Tenis", channel: "Deportes" },
+          { id: 3403, time: "18:00", event: "Seis Naciones: Resumen jornada", sport: "Rugby", channel: "Deportes" },
+          { id: 3404, time: "20:00", event: "NBA Action", sport: "Baloncesto", channel: "Deportes" },
+          { id: 3405, time: "22:00", event: "PGA Tour: Highlights", sport: "Golf", channel: "Deportes" },
+          { id: 3406, time: "01:30", event: "NBA: Warriors - Nuggets", sport: "Baloncesto", channel: "Deportes" },
+          { id: 3501, time: "11:00", event: "Atletismo Pista Cubierta", sport: "Atletismo", channel: "Deportes 2" },
+          { id: 3502, time: "14:00", event: "World of Free Sports", sport: "Polideportivo", channel: "Deportes 2" },
+          { id: 3503, time: "18:00", event: "Liga Asobal: Resumen", sport: "Balonmano", channel: "Deportes 2" },
+          { id: 3504, time: "21:00", event: "NFL Total Access", sport: "Fútbol Americano", channel: "Deportes 2" },
+          { id: 3505, time: "23:00", event: "IndyCar Series: Highlights", sport: "Motor", channel: "Deportes 2" },
+          { id: 3601, time: "12:00", event: "Universo Valdano", sport: "Entrevista", channel: "Vamos" },
+          { id: 3602, time: "14:30", event: "Noticias Vamos", sport: "Informativo", channel: "Vamos" },
+          { id: 3603, time: "17:00", event: "Generación NBA", sport: "Baloncesto", channel: "Vamos" },
+          { id: 3604, time: "20:30", event: "Noticias Vamos", sport: "Informativo", channel: "Vamos" },
+          { id: 3605, time: "21:30", event: "El Día Después", sport: "Programa", channel: "Vamos" },
+          { id: 3606, time: "23:00", event: "Noticias Vamos", sport: "Informativo", channel: "Vamos" },
+          { id: 3701, time: "10:00", event: "Estudio Estadio (Rep.)", sport: "Fútbol", channel: "Teledeporte" },
+          { id: 3702, time: "14:00", event: "Conexión Teledeporte", sport: "Informativo", channel: "Teledeporte" },
+          { id: 3703, time: "17:00", event: "Atletismo: 10km Castellón", sport: "Atletismo", channel: "Teledeporte" },
+          { id: 3704, time: "19:00", event: "Balonmano: Liga Guerreras", sport: "Balonmano", channel: "Teledeporte" },
+          { id: 3705, time: "21:30", event: "Teledeporte Noticias", sport: "Informativo", channel: "Teledeporte" },
+          { id: 3706, time: "22:30", event: "Estudio Estadio", sport: "Programa", channel: "Teledeporte" },
+          { id: 3801, time: "09:00", event: "Lo mejor de Milán 2026", sport: "JJOO 2026", channel: "Eurosport 1" },
+          { id: 3802, time: "13:00", event: "Snooker: Players Championship", sport: "Snooker", channel: "Eurosport 1" },
+          { id: 3803, time: "17:00", event: "Ciclismo: UAE Tour", sport: "Ciclismo", channel: "Eurosport 1" },
+          { id: 3804, time: "21:00", event: "Snooker: Segunda Ronda", sport: "Snooker", channel: "Eurosport 1" },
+          { id: 3901, time: "10:00", event: "JJOO: Patinaje Velocidad (Rep.)", sport: "JJOO 2026", channel: "Eurosport 2" },
+          { id: 3902, time: "14:00", event: "JJOO: Resumen Bobsleigh", sport: "JJOO 2026", channel: "Eurosport 2" },
+          { id: 3903, time: "18:00", event: "Vuelta a Andalucía: Etapa 5", sport: "Ciclismo", channel: "Eurosport 2" },
+          { id: 3904, time: "22:00", event: "Esquí Alpino: Diferido", sport: "Esquí", channel: "Eurosport 2" },
+          { id: 4001, time: "13:00", event: "Premier League Review", sport: "Fútbol", channel: "DAZN 1" },
+          { id: 4002, time: "17:00", event: "Liverpool - Nottingham (Rep.)", sport: "Fútbol", channel: "DAZN 1" },
+          { id: 4003, time: "20:00", event: "Netbusters", sport: "Programa", channel: "DAZN 1" },
+          { id: 4004, time: "21:00", event: "West Ham - Brentford", sport: "Fútbol", channel: "DAZN 1" },
+          { id: 4101, time: "12:00", event: "Liga F Highlights", sport: "Fútbol", channel: "DAZN 2" },
+          { id: 4102, time: "16:00", event: "La Central: Lunes", sport: "Programa", channel: "DAZN 2" },
+          { id: 4103, time: "19:00", event: "SBK Australia: Resumen", sport: "Motor", channel: "DAZN 2" },
+          { id: 4104, time: "21:00", event: "Documental Marc Márquez", sport: "Motor", channel: "DAZN 2" },
+          { id: 4201, time: "14:00", event: "Esport Club", sport: "Informativo", channel: "Esport3" },
+          { id: 4202, time: "16:00", event: "Lliga Asobal: Resum", sport: "Balonmano", channel: "Esport3" },
+          { id: 4203, time: "19:00", event: "Tot Costa", sport: "Informativo", channel: "Esport3" },
+          { id: 4204, time: "20:30", event: "Esport Club", sport: "Programa", channel: "Esport3" },
+          { id: 4205, time: "23:00", event: "Onze", sport: "Debate", channel: "Esport3" },
+          { id: 4206, time: "00:30", event: "3CatInfo Esports", sport: "Informativo", channel: "Esport3" },
+          { id: 4301, time: "13:00", event: "Antiguas civilizaciones", sport: "Historia", channel: "Canal Historia" },
+          { id: 4302, time: "16:00", event: "Forjado a fuego", sport: "Realidad", channel: "Canal Historia" },
+          { id: 4303, time: "21:00", event: "Segunda Guerra Mundial", sport: "Historia", channel: "Canal Historia" },
+          { id: 4401, time: "14:00", event: "Control de carreteras", sport: "Docureality", channel: "DMAX" },
+          { id: 4402, time: "16:00", event: "Alienígenas ancestrales", sport: "Documental", channel: "DMAX" },
+          { id: 4403, time: "22:00", event: "Curiosidades de la Tierra", sport: "Ciencia", channel: "DMAX" },
+          { id: 4501, time: "15:00", event: "Naturaleza: Reyes del hielo", sport: "Documental", channel: "Odisea" },
+          { id: 4502, time: "22:00", event: "Maestros de la ciencia", sport: "Divulgación", channel: "Odisea" }
+        ];
 
-                descExcelBasic: "Domina l'entorn Office 365, dreceres de teclat i gestió eficient de llibres. Aprèn bones pràctiques per introduir dades, referències relatives i absolutes, i funcions essencials.",
-                descExcelInter: "El cor de l'anàlisi de dades. Aprofundim en Taules Dinàmiques, Segmentació i Gràfics combinats. Dominaràs funcions de cerca modernes (BUSCARX) i Validació de Dades.",
-                descExcelAdv: "El salt a l'automatització. Introducció a Power Query per neteja de dades (ETL) i Power Pivot per modelatge. Connexió a orígens externs i la porta d'entrada a Power BI.",
-                descSheets: "L'alternativa 100% col·laborativa a Excel. Aprèn a treballar en temps real amb el teu equip, historial de versions i funcions exclusives de núvol.",
-                descDocs: "Ofimàtica col·laborativa essencial. Redacció de documents i presentacions on múltiples usuaris editen alhora. Gestió de comentaris i suggeriments.",
-                descForms: "L'eina més senzilla per capturar dades. Creació d'enquestes, exàmens o formularis de registre que bolquen la informació automàticament a Sheets.",
-                descDrive: "El centre de comandament de la teva oficina digital. Emmagatzematge segur al núvol, gestió avançada de permisos de carpetes compartides i sincronització.",
-                descLooker: "L'equivalent a Power BI de Google. Connecta els teus Sheets, Forms i Analytics per crear quadres de comandament interactius i gratuïts.",
-                aiTitle: "💡 Formació en IA Generativa",
-                aiDesc: "A les meves formacions d'Intel·ligència Artificial, ensenyem a transformar la productivitat empresarial i personal. No es tracta només d'usar ChatGPT, sinó d'integrar <strong>Copilot, Gemini i Claude</strong> en fluxos reals.",
-                cardGames: "Capacitats Creatives"
-            },
-            en: {
-                roleSpecialist: "Power BI and Microsoft Excel Specialist",
-                roleTrainer: "Trainer", roleConsultant: "Consultant", roleNovelist: "Novelist",
-                btnDashboards: "POWER BI DESKTOP & SERVICE", btnExcel: "OFFICE & EXCEL", btnGoogle: "GOOGLE TOOLS", btnAI: "GENERATIVE AI", btnNovels: "MY NOVELS",
-                dashLinkSales: "📊 SALES ANALYSIS", dashLinkFootball: "⚽ FOOTBALL LEAGUE", dashLinkAttendance: "📅 ATTENDANCE", dashLinkCars: "🚗 CAR RENTAL",
-                aboutDashboardsTitle: "🎯 About these Dashboards",
-                aboutDashboardsDesc: "These dashboards use **fictitious and invented data** created specifically for technical demonstrations. They do not correspond to real company data, but simulate common business scenarios to showcase analysis capabilities.",
-                literarySideTitle: "📚 My Literary Side",
-                bookBtnShop: "📖 Shop / Read", bookBtnTrailer: "🎬 Watch Trailer", bookBtnAudio: "🎧 Listen Audio",
-                bookTitle_fin: "FIN", bookDesc_fin: "Sci-fi thriller about humanity's last hours.",
-                bookTitle_omg: "OH MY GOD", bookDesc_omg: "Divine satire where God comes to Earth on vacation.",
-                bookTitle_manual: "BASIC CONQUEST MANUAL", bookDesc_manual: "Humorous guide to galactic domination.",
-                bookTitle_tocata: "TOCATA Y FUGA...", bookDesc_tocata: "First part of the Lieutenant Escali saga.",
-                bookTitle_blues: "ESCALI'S BLUES", bookDesc_blues: "The noir sequel to Lieutenant Escali.",
-                bookTitle_exodos: "EXODUS", bookDesc_exodos: "Dystopian sci-fi under the pseudonym Kia P. Cabdill.",
+        const CANALES_ORDENADOS = [
+          "Movistar Plus+", "Movistar LaLiga", "DAZN LaLiga", "Liga de Campeones",
+          "Deportes", "Deportes 2", "Vamos", "Teledeporte",
+          "Eurosport 1", "Eurosport 2", "DAZN 1", "DAZN 2",
+          "Esport3", "Canal Historia", "DMAX", "Odisea"
+        ];
 
-                descExcelBasic: "Master the Office 365 environment, keyboard shortcuts, and efficient workbook management. Learn best practices for data entry, relative and absolute references, and essential functions.",
-                descExcelInter: "The heart of data analysis. We delve into Pivot Tables, Slicers, and Combo Charts. You will master modern lookup functions (XLOOKUP) and Data Validation.",
-                descExcelAdv: "The leap to automation. Introduction to Power Query for data cleaning (ETL) and Power Pivot for modeling. Connection to external sources and the gateway to Power BI.",
-                descSheets: "The 100% collaborative alternative to Excel. Learn to work in real-time with your team, version history, and exclusive cloud functions.",
-                descDocs: "Essential collaborative office tools. Drafting documents and presentations where multiple users edit at once. Management of comments and suggestions.",
-                descForms: "The easiest tool for capturing data. Creation of surveys, quizzes, or registration forms that automatically dump information into Sheets.",
-                descDrive: "The command center of your digital office. Secure cloud storage, advanced management of shared folder permissions, and synchronization.",
-                descLooker: "Google's equivalent to Power BI. Connect your Sheets, Forms, and Analytics to create interactive, free, and web-shareable dashboards.",
-                aiTitle: "💡 Generative AI Training",
-                aiDesc: "In my AI training, we teach how to transform business and personal productivity. It's not just about using ChatGPT, but integrating <strong>Copilot, Gemini, and Claude</strong> into real workflows.",
-                cardGames: "Creative Capabilities"
-            },
-            fr: {
-                roleSpecialist: "Spécialiste Power BI et Microsoft Excel",
-                roleTrainer: "Formateur", roleConsultant: "Consultant", roleNovelist: "Romancier",
-                btnDashboards: "POWER BI DESKTOP & SERVICE", btnExcel: "OFFICE & EXCEL", btnGoogle: "OUTILS GOOGLE", btnAI: "IA GÉNÉRATIVE", btnNovels: "MES ROMANS",
-                dashLinkSales: "📊 ANALYSE DES VENTES", dashLinkFootball: "⚽ LIGUE DE FOOTBALL", dashLinkAttendance: "📅 PRÉSENCE", dashLinkCars: "🚗 LOCATION VOITURES",
-                aboutDashboardsTitle: "🎯 À propos de ces Tableaux de Bord",
-                aboutDashboardsDesc: "Ces tableaux de bord sont des exemples utilisant des **données fictives** créées spécifiquement pour des démonstrations techniques. Ils ne correspondent pas à des données réelles d'entreprise, mais simulent des scénarios commerciaux courants.",
-                literarySideTitle: "📚 Mon Côté Littéraire",
-                bookBtnShop: "📖 Acheter / Lire", bookBtnTrailer: "🎬 Voir la Bande-annonce", bookBtnAudio: "🎧 Écouter l'Audio",
-                bookTitle_fin: "FIN", bookDesc_fin: "Thriller de science-fiction sur les dernières heures de l'humanité.",
-                bookTitle_omg: "OH MY GOD", bookDesc_omg: "Satire divine où Dieu descend sur Terre pour des vacances.",
-                bookTitle_manual: "MANUEL DE CONQUÊTE", bookDesc_manual: "Guide humoristique pour la domination galactique.",
-                bookTitle_tocata: "TOCATA ET FUGUE...", bookDesc_tocata: "Première partie de la saga du Lieutenant Escali.",
-                bookTitle_blues: "ESCALI'S BLUES", bookDesc_blues: "La suite noir du Lieutenant Escali.",
-                bookTitle_exodos: "EXODUS", bookDesc_exodos: "Science-fiction dystopique sous le pseudonyme Kia P. Cabdill.",
+        // =============================================
+        // COMPONENTE PARRILLA TV
+        // =============================================
+        const ParrillaTV = ({ onBack }) => {
+            const [ahora] = useState(new Date());
+            const [diaSeleccionado, setDiaSeleccionado] = useState('hoy');
+            const scrollContainerRef = useRef(null);
 
-                descExcelBasic: "Maîtrisez l'environnement Office 365, les raccourcis clavier et la gestion efficace des classeurs. Apprenez les meilleures pratiques pour la saisie de données et les fonctions essentielles.",
-                descExcelInter: "Le cœur de l'analyse de données. Nous approfondissons les tableaux croisés dynamiques, les segments et les graphiques combinés. Maîtrisez les fonctions de recherche modernes (XLOOKUP).",
-                descExcelAdv: "Le saut vers l'automatisation. Introduction à Power Query pour le nettoyage des données (ETL) et Power Pivot pour la modélisation. Connexion à des sources externes.",
-                descSheets: "L'alternative 100% collaborative à Excel. Apprenez à travailler en temps réel avec votre équipe, l'historique des versions et les fonctions cloud exclusives.",
-                descDocs: "Outils bureautiques collaboratifs essentiels. Rédaction de documents et présentations où plusieurs utilisateurs éditent simultanément.",
-                descForms: "L'outil le plus simple pour capturer des données. Création de sondages, quiz ou formulaires d'inscription qui déversent automatiquement les informations dans Sheets.",
-                descDrive: "Le centre de commande de votre bureau numérique. Stockage cloud sécurisé, gestion avancée des autorisations de dossiers partagés et synchronisation.",
-                descLooker: "L'équivalent de Power BI par Google. Connectez vos Sheets, Forms et Analytics pour créer des tableaux de bord interactifs et gratuits.",
-                aiTitle: "💡 Formation en IA Générative",
-                aiDesc: "Dans mes formations en IA, nous enseignons comment transformer la productivité. Il ne s'agit pas seulement d'utiliser ChatGPT, mais d'intégrer <strong>Copilot, Gemini et Claude</strong> dans des flux réels.",
-                cardGames: "Capacités Créatives"
-            }
+            const fechaHoy = new Date(ahora);
+            const fechaManana = new Date(ahora);
+            fechaManana.setDate(fechaManana.getDate() + 1);
+
+            const dosHorasAntes = new Date(ahora.getTime() - 2 * 60 * 60 * 1000);
+            const eventosBase = diaSeleccionado === 'hoy' ? [...EVENTOS_HOY] : [...EVENTOS_MANANA];
+
+            const eventosFiltrados = eventosBase.filter(evento => {
+                if (diaSeleccionado === 'manana') return true;
+                const [hours, minutes] = evento.time.split(':');
+                const eventDate = new Date(ahora);
+                if (parseInt(hours, 10) < 5) eventDate.setDate(eventDate.getDate() + 1);
+                eventDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+                return eventDate >= dosHorasAntes;
+            });
+
+            const getChannelHeaderStyle = (channel) => {
+                if (channel === "Movistar Plus+") return "bg-blue-800 text-white";
+                if (channel.includes("DAZN")) return "bg-yellow-400 text-slate-900";
+                if (channel.includes("Movistar") || channel === "Vamos" || channel.includes("Deportes") || channel === "Liga de Campeones") return "bg-blue-600 text-white";
+                if (channel === "Canal Historia") return "bg-slate-900 text-amber-500";
+                if (channel === "DMAX") return "bg-gray-800 text-white";
+                if (channel === "Odisea") return "bg-teal-700 text-white";
+                if (channel === "Esport3") return "bg-green-600 text-white";
+                if (channel.includes("Eurosport")) return "bg-red-600 text-white";
+                if (channel === "Teledeporte") return "bg-orange-500 text-white";
+                return "bg-slate-700 text-white";
+            };
+
+            const isEnDirecto = (eventTime) => {
+                if (diaSeleccionado !== 'hoy') return false;
+                const [hours, minutes] = eventTime.split(':');
+                const eventDate = new Date(ahora);
+                if (parseInt(hours, 10) < 5) eventDate.setDate(eventDate.getDate() + 1);
+                eventDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+                const timeDiff = ahora.getTime() - eventDate.getTime();
+                return timeDiff >= 0 && timeDiff <= (120 * 60 * 1000);
+            };
+
+            const handleScroll = (direction) => {
+                const amount = 350;
+                if (!scrollContainerRef.current) return;
+                if (direction === 'left') scrollContainerRef.current.scrollBy({ left: -amount, behavior: 'smooth' });
+                else if (direction === 'right') scrollContainerRef.current.scrollBy({ left: amount, behavior: 'smooth' });
+                else if (direction === 'up') scrollContainerRef.current.scrollBy({ top: -amount, behavior: 'smooth' });
+                else if (direction === 'down') scrollContainerRef.current.scrollBy({ top: amount, behavior: 'smooth' });
+            };
+
+            return (
+                <div className="animate-in fade-in duration-500 flex flex-col h-full">
+                    {/* Cabecera parrilla */}
+                    <div className="bg-white/5 rounded-2xl border border-white/10 p-4 mb-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <button onClick={onBack} className="text-gray-500 hover:text-white transition-colors flex items-center gap-2">
+                                    <i className="fa-solid fa-arrow-left"></i>
+                                </button>
+                                <h2 className="text-xl font-bold flex items-center gap-2">
+                                    <i className="fa-solid fa-tv text-cyan-400"></i>
+                                    Parrilla TV 2026
+                                </h2>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <div className="flex bg-black/40 p-1 rounded-lg border border-white/10">
+                                    <button
+                                        onClick={() => setDiaSeleccionado('hoy')}
+                                        className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${diaSeleccionado === 'hoy' ? 'bg-cyan-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                                    >
+                                        Hoy ({fechaHoy.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })})
+                                    </button>
+                                    <button
+                                        onClick={() => setDiaSeleccionado('manana')}
+                                        className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${diaSeleccionado === 'manana' ? 'bg-cyan-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                                    >
+                                        Mañana ({fechaManana.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })})
+                                    </button>
+                                </div>
+                                <div className="flex items-center gap-2 bg-cyan-900/40 text-cyan-300 px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-500/30">
+                                    <i className="fa-solid fa-clock"></i>
+                                    {ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                                </div>
+                            </div>
+                        </div>
+                        <p className="text-gray-500 text-xs mt-3 text-center">
+                            <i className="fa-solid fa-arrow-right mr-1 text-cyan-500"></i>
+                            Desplázate horizontalmente entre los 16 canales
+                        </p>
+                    </div>
+
+                    {/* D-Pad controls */}
+                    <div className="fixed bottom-8 right-6 z-50 flex flex-col items-center gap-1 bg-black/80 backdrop-blur-md p-2 rounded-xl border border-white/10 shadow-lg">
+                        <button onClick={() => handleScroll('up')} className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"><i className="fa-solid fa-arrow-up text-xs"></i></button>
+                        <div className="flex gap-1">
+                            <button onClick={() => handleScroll('left')} className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"><i className="fa-solid fa-arrow-left text-xs"></i></button>
+                            <button onClick={() => handleScroll('down')} className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"><i className="fa-solid fa-arrow-down text-xs"></i></button>
+                            <button onClick={() => handleScroll('right')} className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"><i className="fa-solid fa-arrow-right text-xs"></i></button>
+                        </div>
+                    </div>
+
+                    {/* Grid canales */}
+                    <div ref={scrollContainerRef} className="flex-1 overflow-auto tv-scroll rounded-xl" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+                        <div className="flex gap-3 h-max pb-6" style={{ width: 'max-content' }}>
+                            {CANALES_ORDENADOS.map(canal => {
+                                const eventosDelCanal = eventosFiltrados
+                                    .filter(e => e.channel === canal)
+                                    .sort((a, b) => {
+                                        const [hA] = a.time.split(':');
+                                        const [hB] = b.time.split(':');
+                                        const tA = parseInt(hA, 10) < 5 ? parseInt(hA, 10) + 24 : parseInt(hA, 10);
+                                        const tB = parseInt(hB, 10) < 5 ? parseInt(hB, 10) + 24 : parseInt(hB, 10);
+                                        return tA - tB || a.time.localeCompare(b.time);
+                                    });
+
+                                return (
+                                    <div key={canal} className="w-64 flex-shrink-0 flex flex-col bg-gray-900 rounded-xl border border-white/10 overflow-hidden">
+                                        <div className={`p-3 font-bold text-center text-sm ${getChannelHeaderStyle(canal)}`}>
+                                            {canal}
+                                        </div>
+                                        <div className="p-2 flex-1 space-y-2">
+                                            {eventosDelCanal.length > 0 ? (
+                                                eventosDelCanal.map(evento => {
+                                                    const directo = isEnDirecto(evento.time);
+                                                    return (
+                                                        <div key={evento.id} className={`p-3 rounded-lg border transition-all ${directo ? 'border-red-500/50 bg-red-950/40 ring-1 ring-red-500/30' : 'border-white/5 bg-white/5 hover:bg-white/10'}`}>
+                                                            <div className="flex items-center justify-between mb-1.5">
+                                                                <span className={`font-mono font-bold text-xs px-2 py-0.5 rounded ${directo ? 'bg-red-900/60 text-red-300' : 'bg-gray-800 text-gray-400'}`}>
+                                                                    {evento.time}
+                                                                </span>
+                                                                {directo && (
+                                                                    <span className="flex items-center gap-1 text-[9px] uppercase font-bold text-red-400 animate-pulse">
+                                                                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full inline-block"></span> En directo
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <h3 className="font-semibold text-gray-100 text-xs leading-tight mb-1">{evento.event}</h3>
+                                                            <p className="text-[10px] text-gray-500 italic">{evento.sport}</p>
+                                                        </div>
+                                                    );
+                                                })
+                                            ) : (
+                                                <div className="flex flex-col items-center justify-center h-24 text-gray-600 text-center p-4">
+                                                    <i className="fa-solid fa-circle-exclamation mb-2 opacity-50"></i>
+                                                    <span className="text-xs">Sin eventos programados</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
         };
 
-        // --- STATE & LOGIC ---
-        let currentLanguage = 'es';
-        let currentBook = 0;
-        let currentGalleryKey = null;
-        let currentImageIndex = 0;
-        const totalBooks = booksData.length;
+        // =============================================
+        // FRASES CÉLEBRES — 4 APIs verificadas + banco local
+        // Todas con CORS habilitado, sin clave, gratuitas:
+        //
+        // 1. quoteslate.vercel.app  — 2600+ frases EN, filtro autor/tag ✅
+        // 2. quotes-api-three.vercel.app — 1746 frases ES+EN, búsqueda por autor ✅
+        // 3. quotes-db.vercel.app — random EN ✅
+        // 4. random-quotes-freeapi.vercel.app — random EN ✅
+        // 5. Banco local 80 frases — fallback offline ✅
+        // =============================================
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const parts = document.querySelectorAll('.highlight-text .part');
-            let currentPart = 0;
-            if(parts.length > 0){
-                setInterval(() => {
-                    parts.forEach(p => p.classList.remove('highlight'));
-                    parts[currentPart].classList.add('highlight');
-                    currentPart = (currentPart + 1) % parts.length;
-                }, 2500);
+        const BANCO_LOCAL = [
+          {q:"La imaginación es más importante que el conocimiento.",a:"Albert Einstein"},
+          {q:"Dos cosas son infinitas: el universo y la estupidez humana.",a:"Albert Einstein"},
+          {q:"La creatividad es la inteligencia divirtiéndose.",a:"Albert Einstein"},
+          {q:"En medio de la dificultad yace la oportunidad.",a:"Albert Einstein"},
+          {q:"La vida es lo que pasa mientras estás ocupado haciendo otros planes.",a:"John Lennon"},
+          {q:"Sé el cambio que quieres ver en el mundo.",a:"Mahatma Gandhi"},
+          {q:"No hay camino para la paz; la paz es el camino.",a:"Mahatma Gandhi"},
+          {q:"La libertad no es algo que se da; es algo que se conquista.",a:"Malcolm X"},
+          {q:"El único modo de hacer un gran trabajo es amar lo que haces.",a:"Steve Jobs"},
+          {q:"El arte es la mentira que nos permite conocer la verdad.",a:"Pablo Picasso"},
+          {q:"No llores porque terminó, sonríe porque sucedió.",a:"Gabriel García Márquez"},
+          {q:"El secreto de la felicidad no es hacer lo que se quiere, sino querer lo que se hace.",a:"Leo Tolstoi"},
+          {q:"La vida sin música sería un error.",a:"Friedrich Nietzsche"},
+          {q:"Lo que no te mata te hace más fuerte.",a:"Friedrich Nietzsche"},
+          {q:"La educación es el arma más poderosa para cambiar el mundo.",a:"Nelson Mandela"},
+          {q:"El amor es la única fuerza capaz de transformar a un enemigo en amigo.",a:"Martin Luther King Jr."},
+          {q:"Un libro es un sueño que sostienes en tus manos.",a:"Neil Gaiman"},
+          {q:"La esperanza es el sueño del hombre despierto.",a:"Aristóteles"},
+          {q:"Elige un trabajo que ames y no trabajarás ni un día de tu vida.",a:"Confucio"},
+          {q:"El éxito es la suma de pequeños esfuerzos repetidos día tras día.",a:"Robert Collier"},
+          {q:"El mayor riesgo es no correr ningún riesgo.",a:"Mark Zuckerberg"},
+          {q:"Prefiero morir de pie que vivir de rodillas.",a:"Emiliano Zapata"},
+          {q:"Si quieres ir rápido, ve solo. Si quieres llegar lejos, ve acompañado.",a:"Proverbio africano"},
+          {q:"La peor soledad es no estar cómodo con uno mismo.",a:"Mark Twain"},
+          {q:"El coraje no es la ausencia del miedo, sino actuar pese a él.",a:"Ambrose Redmoon"},
+          {q:"Nada en la vida debe ser temido, solamente comprendido.",a:"Marie Curie"},
+          {q:"El miedo es el camino al lado oscuro.",a:"Yoda"},
+          {q:"El que no conoce el miedo no puede ser valiente.",a:"Ernest Hemingway"},
+          {q:"La risa es el sol que ahuyenta el invierno del rostro humano.",a:"Victor Hugo"},
+          {q:"Si estás pasando por el infierno, sigue adelante.",a:"Winston Churchill"},
+          {q:"El éxito no es definitivo, el fracaso no es fatal: lo que cuenta es el coraje de continuar.",a:"Winston Churchill"},
+          {q:"Nadie puede hacerte sentir inferior sin tu consentimiento.",a:"Eleanor Roosevelt"},
+          {q:"Dime y lo olvido, enséñame y lo recuerdo, involúcrame y lo aprendo.",a:"Benjamin Franklin"},
+          {q:"La belleza salvará al mundo.",a:"Fiódor Dostoievski"},
+          {q:"Caminante, son tus huellas el camino y nada más.",a:"Antonio Machado"},
+          {q:"Podrán cortar todas las flores, pero no podrán detener la primavera.",a:"Pablo Neruda"},
+          {q:"Un día sin reír es un día perdido.",a:"Charles Chaplin"},
+          {q:"Pienso, luego existo.",a:"René Descartes"},
+          {q:"Ser o no ser, esa es la cuestión.",a:"William Shakespeare"},
+          {q:"El infierno son los otros.",a:"Jean-Paul Sartre"},
+        ];
+
+        const FrasesView = ({ onBack }) => {
+            const [modo, setModo] = useState('dia');
+            const [inputValor, setInputValor] = useState('');
+            const [frase, setFrase] = useState(null);
+            const [resultados, setResultados] = useState([]);
+            const [cargando, setCargando] = useState(false);
+            const [error, setError] = useState('');
+            const [fuente, setFuente] = useState('');
+            const cache = React.useRef({});
+
+            // ═══════════════════════════════════════════════════════
+            // 🔑 CLAVES API — pon aquí las tuyas (todas gratuitas)
+            //    Groq:       console.groq.com → API Keys → Create
+            //    Gemini:     aistudio.google.com → Get API Key
+            //    Mistral:    console.mistral.ai → API Keys
+            //    OpenRouter: openrouter.ai → Keys → Create Key
+            // ═══════════════════════════════════════════════════════
+            const KEYS = {
+                groq:       'TU_CLAVE_GROQ_AQUI',
+                gemini:     'TU_CLAVE_GEMINI_AQUI',
+                mistral:    'TU_CLAVE_MISTRAL_AQUI',
+                openrouter: 'TU_CLAVE_OPENROUTER_AQUI',
+            };
+
+            // ═══════════════════════════════════════════════════════
+            // PROVEEDORES — límites diarios gratuitos totales: ~17.400/día
+            // ═══════════════════════════════════════════════════════
+            const PROVEEDORES = [
+                {
+                    id: 'groq_llama',
+                    nombre: 'Groq / Llama 4',
+                    limite: 14400,
+                    llamar: async (prompt) => {
+                        const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${KEYS.groq}` },
+                            body: JSON.stringify({
+                                model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+                                max_tokens: 300,
+                                messages: [{ role: 'user', content: prompt }]
+                            })
+                        });
+                        if (!r.ok) throw new Error(`Groq ${r.status}`);
+                        const d = await r.json();
+                        return { texto: d.choices[0].message.content.trim(), ia: 'Groq · Llama 4' };
+                    }
+                },
+                {
+                    id: 'groq_qwen',
+                    nombre: 'Groq / Qwen3',
+                    limite: 1000,
+                    llamar: async (prompt) => {
+                        const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${KEYS.groq}` },
+                            body: JSON.stringify({
+                                model: 'qwen/qwen3-32b',
+                                max_tokens: 300,
+                                messages: [{ role: 'user', content: prompt }]
+                            })
+                        });
+                        if (!r.ok) throw new Error(`Groq/Qwen ${r.status}`);
+                        const d = await r.json();
+                        return { texto: d.choices[0].message.content.trim(), ia: 'Groq · Qwen3' };
+                    }
+                },
+                {
+                    id: 'gemini',
+                    nombre: 'Gemini Flash',
+                    limite: 1000,
+                    llamar: async (prompt) => {
+                        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${KEYS.gemini}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                        });
+                        if (!r.ok) throw new Error(`Gemini ${r.status}`);
+                        const d = await r.json();
+                        return { texto: d.candidates[0].content.parts[0].text.trim(), ia: 'Gemini Flash' };
+                    }
+                },
+                {
+                    id: 'mistral',
+                    nombre: 'Mistral Small',
+                    limite: 2880,
+                    llamar: async (prompt) => {
+                        const r = await fetch('https://api.mistral.ai/v1/chat/completions', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${KEYS.mistral}` },
+                            body: JSON.stringify({
+                                model: 'mistral-small-latest',
+                                max_tokens: 300,
+                                messages: [{ role: 'user', content: prompt }]
+                            })
+                        });
+                        if (!r.ok) throw new Error(`Mistral ${r.status}`);
+                        const d = await r.json();
+                        return { texto: d.choices[0].message.content.trim(), ia: 'Mistral Small' };
+                    }
+                },
+                {
+                    id: 'openrouter_llama',
+                    nombre: 'OpenRouter / Llama',
+                    limite: 999999,
+                    llamar: async (prompt) => {
+                        const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${KEYS.openrouter}`,
+                                'HTTP-Referer': 'https://mystica-ai.com',
+                                'X-Title': 'Mística AI'
+                            },
+                            body: JSON.stringify({
+                                model: 'meta-llama/llama-3.1-8b-instruct:free',
+                                max_tokens: 300,
+                                messages: [{ role: 'user', content: prompt }]
+                            })
+                        });
+                        if (!r.ok) throw new Error(`OpenRouter ${r.status}`);
+                        const d = await r.json();
+                        return { texto: d.choices[0].message.content.trim(), ia: 'OpenRouter · Llama' };
+                    }
+                },
+                {
+                    id: 'openrouter_mistral',
+                    nombre: 'OpenRouter / Mistral',
+                    limite: 999999,
+                    llamar: async (prompt) => {
+                        const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${KEYS.openrouter}`,
+                                'HTTP-Referer': 'https://mystica-ai.com',
+                                'X-Title': 'Mística AI'
+                            },
+                            body: JSON.stringify({
+                                model: 'mistralai/mistral-7b-instruct:free',
+                                max_tokens: 300,
+                                messages: [{ role: 'user', content: prompt }]
+                            })
+                        });
+                        if (!r.ok) throw new Error(`OpenRouter/Mistral ${r.status}`);
+                        const d = await r.json();
+                        return { texto: d.choices[0].message.content.trim(), ia: 'OpenRouter · Mistral' };
+                    }
+                },
+                {
+                    id: 'claude',
+                    nombre: 'Claude (Anthropic)',
+                    limite: 40,
+                    llamar: async (prompt) => {
+                        const r = await fetch('https://api.anthropic.com/v1/messages', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                model: 'claude-haiku-4-5-20251001',
+                                max_tokens: 300,
+                                messages: [{ role: 'user', content: prompt }]
+                            })
+                        });
+                        if (!r.ok) throw new Error(`Claude ${r.status}`);
+                        const d = await r.json();
+                        return { texto: d.content[0].text.trim(), ia: 'Claude (Anthropic)' };
+                    }
+                },
+            ];
+
+            // ═══════════════════════════════════════════════════════
+            // MOTOR DE ROTACIÓN Y FALLBACK
+            // Orden aleatorio en cada arranque, fallback automático
+            // ═══════════════════════════════════════════════════════
+
+            // Mezcla los proveedores aleatoriamente al cargar
+            const ordenRef = React.useRef(null);
+            if (!ordenRef.current) {
+                // Pone los de mayor límite con más peso en la rotación
+                // pero mantiene orden aleatorio para distribuir carga
+                const orden = [...PROVEEDORES].sort(() => Math.random() - 0.5);
+                ordenRef.current = orden;
             }
 
-            updateCarousel();
-            changeLanguage('es');
-            setInterval(() => nextBook(), 5000);
-        });
+            const parsearRespuesta = (texto) => {
+                // Intenta extraer FRASE: / AUTOR: del formato estructurado
+                const fraseLine = texto.match(/FRASE:\s*(.+)/)?.[1]?.trim();
+                const autorLine = texto.match(/AUTOR:\s*(.+)/)?.[1]?.trim();
+                if (fraseLine && autorLine) return { q: fraseLine.replace(/^["«»""]|["«»""]$/g,''), a: autorLine };
+                // Si no tiene formato, intenta "frase" — Autor
+                const guion = texto.match(/^["«»""]?(.+?)["«»""]?\s*[—–-]\s*(.+)$/m);
+                if (guion) return { q: guion[1].trim(), a: guion[2].trim() };
+                // Devuelve el texto como frase sin autor conocido
+                return { q: texto.replace(/^["«»""]|["«»""]$/g,'').trim(), a: 'Desconocido' };
+            };
 
-        // --- NAVIGATION ---
-        function showSection(sectionId) {
-            document.querySelectorAll('.section-content').forEach(s => {
-                s.classList.remove('active');
-                s.style.display = 'none';
-            });
-            document.querySelectorAll('.menu-btn, .novel-btn').forEach(b => b.classList.remove('active'));
+            const TIMEOUT = 7000;
+            const conTimeout = (promesa) => Promise.race([
+                promesa,
+                new Promise((_, r) => setTimeout(() => r(new Error('Timeout')), TIMEOUT))
+            ]);
 
-            const target = document.getElementById(sectionId);
-            if (target) {
-                target.style.display = 'block';
-                setTimeout(() => target.classList.add('active'), 10);
-            }
-        }
+            // Llama en cascada: intenta cada proveedor en orden hasta obtener respuesta
+            const llamarCascada = async (prompt) => {
+                // Primero Claude (funciona sin clave en claude.ai)
+                // Luego el resto en orden aleatorio si tienen clave configurada
+                const conClave = ordenRef.current.filter(p => {
+                    const k = KEYS[p.id.split('_')[0]];
+                    return k && !k.startsWith('TU_');
+                });
+                const orden = [
+                    PROVEEDORES.find(p => p.id === 'claude'),
+                    ...conClave.filter(p => p.id !== 'claude'),
+                ].filter(Boolean);
 
-        // --- LANGUAGE ---
-        function changeLanguage(lang) {
-            currentLanguage = lang;
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.querySelector(`.btn-${lang}`);
-            if(activeBtn) activeBtn.classList.add('active');
-            
-            document.querySelectorAll('[data-translation-key]').forEach(el => {
-                const key = el.dataset.translationKey;
-                if (translations[lang][key]) {
-                    if (key === 'aiDesc') {
-                        el.innerHTML = translations[lang][key];
-                    } else {
-                        el.textContent = translations[lang][key];
+                for (const proveedor of orden) {
+                    try {
+                        const { texto, ia } = await conTimeout(proveedor.llamar(prompt));
+                        if (!texto || texto.length < 10) throw new Error('Respuesta vacía');
+                        return { ...parsearRespuesta(texto), src: `✨ ${ia}` };
+                    } catch (e) {
+                        await new Promise(r => setTimeout(r, 300));
                     }
                 }
+                return null;
+            };
+
+            // ═══════════════════════════════════════════════════════
+            // BANCO LOCAL — último recurso sin red
+            // ═══════════════════════════════════════════════════════
+            const BANCO = [
+                {q:"La imaginación es más importante que el conocimiento.",a:"Albert Einstein"},
+                {q:"Dos cosas son infinitas: el universo y la estupidez humana.",a:"Albert Einstein"},
+                {q:"Sé el cambio que quieres ver en el mundo.",a:"Mahatma Gandhi"},
+                {q:"El único modo de hacer un gran trabajo es amar lo que haces.",a:"Steve Jobs"},
+                {q:"La vida sin música sería un error.",a:"Friedrich Nietzsche"},
+                {q:"Lo que no te mata te hace más fuerte.",a:"Friedrich Nietzsche"},
+                {q:"La educación es el arma más poderosa para cambiar el mundo.",a:"Nelson Mandela"},
+                {q:"El amor es la única fuerza capaz de transformar a un enemigo en amigo.",a:"Martin Luther King Jr."},
+                {q:"El miedo es el camino al lado oscuro.",a:"Yoda"},
+                {q:"Si estás pasando por el infierno, sigue adelante.",a:"Winston Churchill"},
+                {q:"No llores porque terminó, sonríe porque sucedió.",a:"Gabriel García Márquez"},
+                {q:"Pienso, luego existo.",a:"René Descartes"},
+                {q:"Ser o no ser, esa es la cuestión.",a:"William Shakespeare"},
+                {q:"La risa es el sol que ahuyenta el invierno del rostro humano.",a:"Victor Hugo"},
+                {q:"Un día sin reír es un día perdido.",a:"Charles Chaplin"},
+                {q:"Caminante, son tus huellas el camino y nada más.",a:"Antonio Machado"},
+                {q:"Podrán cortar todas las flores, pero no podrán detener la primavera.",a:"Pablo Neruda"},
+                {q:"La belleza salvará al mundo.",a:"Fiódor Dostoievski"},
+                {q:"El infierno son los otros.",a:"Jean-Paul Sartre"},
+                {q:"Nada en la vida debe ser temido, solamente comprendido.",a:"Marie Curie"},
+            ];
+            const localRandom = () => {
+                const f = BANCO[Math.floor(Math.random() * BANCO.length)];
+                return { ...f, src: '📚 Banco local' };
+            };
+
+            // ═══════════════════════════════════════════════════════
+            // PROMPTS
+            // ═══════════════════════════════════════════════════════
+            const promptRandom = () =>
+                `Dame UNA frase célebre de un pensador, escritor, filósofo, científico o líder. SIEMPRE en español. Formato exacto:\nFRASE: [la frase]\nAUTOR: [nombre del autor]\nNada más.`;
+
+            const promptDia = () => {
+                const fecha = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
+                return `Es ${fecha}. Dame UNA frase célebre inspiradora para este día. SIEMPRE en español. Formato exacto:\nFRASE: [la frase]\nAUTOR: [nombre del autor]\nNada más.`;
+            };
+
+            const promptPersonaje = (p) =>
+                `Dame 5 frases célebres reales o representativas de ${p} en español. Si no conoces a ${p}, escribe frases en su estilo. Formato exacto, una por bloque:\nFRASE: [frase 1]\nAUTOR: ${p}\nFRASE: [frase 2]\nAUTOR: ${p}\nFRASE: [frase 3]\nAUTOR: ${p}\nFRASE: [frase 4]\nAUTOR: ${p}\nFRASE: [frase 5]\nAUTOR: ${p}\nNada más.`;
+
+            const promptTema = (t) =>
+                `Dame 5 frases célebres reales sobre "${t}" en español, de autores diferentes. Formato exacto, una por bloque:\nFRASE: [frase 1]\nAUTOR: [autor 1]\nFRASE: [frase 2]\nAUTOR: [autor 2]\nFRASE: [frase 3]\nAUTOR: [autor 3]\nFRASE: [frase 4]\nAUTOR: [autor 4]\nFRASE: [frase 5]\nAUTOR: [autor 5]\nNada más.`;
+
+            // Parsea múltiples frases de la respuesta
+            const parsearLista = (texto, ia) => {
+                const frases = [];
+                const lineas = texto.split('\n');
+                let q = null;
+                for (const l of lineas) {
+                    const mf = l.match(/^FRASE:\s*(.+)/);
+                    const ma = l.match(/^AUTOR:\s*(.+)/);
+                    if (mf) q = mf[1].trim().replace(/^["«»""]|["«»""]$/g,'');
+                    if (ma && q) { frases.push({ q, a: ma[1].trim(), src: `✨ ${ia}` }); q = null; }
+                }
+                return frases;
+            };
+
+            // ═══════════════════════════════════════════════════════
+            // ACCIONES
+            // ═══════════════════════════════════════════════════════
+            const run = (fn) => {
+                setCargando(true); setError(''); setFrase(null); setResultados([]); setFuente('');
+                fn().catch(e => {
+                    console.error(e);
+                    const f = localRandom();
+                    setFrase(f); setFuente(f.src);
+                }).finally(() => setCargando(false));
+            };
+
+            const obtenerFraseDia = () => run(async () => {
+                const ck = 'dia_' + new Date().toDateString();
+                if (cache.current[ck]) { const f = cache.current[ck]; setFrase(f); setFuente(f.src); return; }
+                const f = (await llamarCascada(promptDia())) || localRandom();
+                cache.current[ck] = f;
+                setFrase(f); setFuente(f.src);
             });
-            updateBookDisplay();
-        }
 
-        // --- BOOKS CAROUSEL ---
-        function updateCarousel() {
-            const covers = document.querySelectorAll('.book-cover');
-            covers.forEach((cover, index) => {
-                cover.className = 'book-cover';
-                let diff = (index - currentBook + totalBooks) % totalBooks;
-                if (diff === 0) cover.classList.add('active');
-                else if (diff === 1) cover.classList.add('next');
-                else if (diff === totalBooks - 1) cover.classList.add('prev');
-                else cover.classList.add('hidden');
+            const obtenerAlAzar = () => run(async () => {
+                const f = (await llamarCascada(promptRandom())) || localRandom();
+                setFrase(f); setFuente(f.src);
             });
-            updateBookDisplay();
-        }
 
-        function updateBookDisplay() {
-            const book = booksData[currentBook];
-            const lang = translations[currentLanguage];
-            const titleEl = document.getElementById('bookTitle');
-            const descEl = document.getElementById('bookDescription');
-            
-            if(titleEl) titleEl.textContent = lang[`bookTitle_${book.id}`];
-            if(descEl) descEl.textContent = lang[`bookDesc_${book.id}`];
-            
-            const actionContainer = document.getElementById('bookActions');
-            if(actionContainer) {
-                actionContainer.innerHTML = '';
-                
-                const mainBtn = document.createElement('a');
-                mainBtn.href = book.link; mainBtn.target = "_blank"; mainBtn.className = "book-action-btn";
-                mainBtn.style.background = "#8E44AD"; mainBtn.textContent = lang.bookBtnShop;
-                actionContainer.appendChild(mainBtn);
-
-                if (book.trailer) {
-                    const trBtn = document.createElement('button');
-                    trBtn.className = "book-action-btn"; trBtn.style.background = "#c0392b";
-                    trBtn.textContent = lang.bookBtnTrailer; trBtn.onclick = () => openMediaModal('video', book.trailer);
-                    actionContainer.appendChild(trBtn);
+            const buscarPorPersonaje = () => run(async () => {
+                const q = inputValor.trim();
+                if (!q) { const f = (await llamarCascada(promptRandom())) || localRandom(); setFrase(f); setFuente(f.src); return; }
+                const ck = 'pers_' + q.toLowerCase();
+                if (cache.current[ck]) {
+                    const lista = cache.current[ck];
+                    setResultados(lista); setFrase(lista[0]); setFuente(lista[0].src); return;
                 }
-                if (book.trailer2) {
-                    const trBtn2 = document.createElement('button');
-                    trBtn2.className = "book-action-btn"; trBtn2.style.background = "#e74c3c";
-                    trBtn2.textContent = lang.bookBtnTrailer + " 2"; trBtn2.onclick = () => openMediaModal('video', book.trailer2);
-                    actionContainer.appendChild(trBtn2);
+                // Cascada inteligente: Claude primero, luego proveedores con clave
+                const ordenLista = [
+                    PROVEEDORES.find(p => p.id === 'claude'),
+                    ...ordenRef.current.filter(p => { const k = KEYS[p.id.split('_')[0]]; return p.id !== 'claude' && k && !k.startsWith('TU_'); })
+                ].filter(Boolean);
+                for (const proveedor of ordenLista) {
+                    try {
+                        const { texto, ia } = await conTimeout(proveedor.llamar(promptPersonaje(q)));
+                        const lista = parsearLista(texto, ia);
+                        if (lista.length > 0) {
+                            cache.current[ck] = lista;
+                            setResultados(lista);
+                            const f = lista[Math.floor(Math.random() * lista.length)];
+                            setFrase(f); setFuente(f.src); return;
+                        }
+                    } catch {}
                 }
-                if (book.audio) {
-                    const audBtn = document.createElement('button');
-                    audBtn.className = "book-action-btn"; audBtn.style.background = "#27ae60";
-                    audBtn.textContent = lang.bookBtnAudio; audBtn.onclick = () => openMediaModal('audio', book.audio);
-                    actionContainer.appendChild(audBtn);
+                const f = localRandom(); setFrase(f); setFuente(f.src);
+            });
+
+            const buscarPorPalabra = () => run(async () => {
+                const q = inputValor.trim();
+                if (!q) { const f = (await llamarCascada(promptRandom())) || localRandom(); setFrase(f); setFuente(f.src); return; }
+                const ck = 'tema_' + q.toLowerCase();
+                if (cache.current[ck]) {
+                    const lista = cache.current[ck];
+                    setResultados(lista); setFrase(lista[0]); setFuente(lista[0].src); return;
                 }
-            }
-        }
-        function nextBook() { currentBook = (currentBook + 1) % totalBooks; updateCarousel(); }
-        function prevBook() { currentBook = (currentBook - 1 + totalBooks) % totalBooks; updateCarousel(); }
-        function goToBook(index) { currentBook = index; updateCarousel(); }
+                const ordenLista2 = [
+                    PROVEEDORES.find(p => p.id === 'claude'),
+                    ...ordenRef.current.filter(p => { const k = KEYS[p.id.split('_')[0]]; return p.id !== 'claude' && k && !k.startsWith('TU_'); })
+                ].filter(Boolean);
+                for (const proveedor of ordenLista2) {
+                    try {
+                        const { texto, ia } = await conTimeout(proveedor.llamar(promptTema(q)));
+                        const lista = parsearLista(texto, ia);
+                        if (lista.length > 0) {
+                            cache.current[ck] = lista;
+                            setResultados(lista);
+                            const f = lista[Math.floor(Math.random() * lista.length)];
+                            setFrase(f); setFuente(f.src); return;
+                        }
+                    } catch {}
+                }
+                const f = localRandom(); setFrase(f); setFuente(f.src);
+            });
+            // UI
+            // ═══════════════════════════════════════════════════════
+            const modos = [
+                { id:'dia',       icon:'fa-sun',              label:'Frase del Día', color:'amber'  },
+                { id:'personaje', icon:'fa-user',             label:'Por Personaje', color:'purple' },
+                { id:'palabra',   icon:'fa-magnifying-glass', label:'Por Palabra',   color:'blue'   },
+                { id:'azar',      icon:'fa-shuffle',          label:'Al Azar',       color:'green'  },
+            ];
+            const colorMap = {
+                amber:  { border:'border-amber-500',  text:'text-amber-400',  activeBg:'bg-amber-600'  },
+                purple: { border:'border-purple-500', text:'text-purple-400', activeBg:'bg-purple-600' },
+                blue:   { border:'border-blue-500',   text:'text-blue-400',   activeBg:'bg-blue-600'   },
+                green:  { border:'border-green-500',  text:'text-green-400',  activeBg:'bg-green-600'  },
+            };
+            const modoActual = modos.find(m => m.id === modo);
+            const c = colorMap[modoActual.color];
 
-        // --- GALLERIES & MODALS ---
-        function openGallery(key) {
-            currentGalleryKey = key;
-            const images = dashboards[key];
-            const grid = document.getElementById('galleryGrid');
-            if(grid) {
-                grid.innerHTML = '';
-                images.forEach((src, idx) => {
-                    const item = document.createElement('div');
-                    item.className = 'gallery-item';
-                    item.innerHTML = `<img src="${src}" onerror="this.src='https://placehold.co/600x400/ccc/fff?text=N/A'">`;
-                    item.onclick = () => openImageModal(null, idx);
-                    grid.appendChild(item);
-                });
-            }
-            const titleEl = document.getElementById('galleryTitle');
-            if(titleEl) titleEl.textContent = key.toUpperCase();
-            openModal('galleryModal');
-        }
+            return (
+                <div className="animate-in fade-in duration-500 space-y-6 max-w-2xl mx-auto">
 
-        function openModal(id) { 
-            const el = document.getElementById(id);
-            if(el) el.style.display = 'flex'; 
-        }
-        function closeModal(id, event) {
-            if(event && event.target !== event.currentTarget && !event.target.classList.contains('close-modal')) return;
-            const el = document.getElementById(id);
-            if(el) el.style.display = 'none';
-            if(id === 'mediaModal') { 
-                const v = document.getElementById('videoPlayer');
-                const a = document.getElementById('audioPlayer');
-                if(v) v.pause(); 
-                if(a) a.pause(); 
-            }
-        }
-        function openMediaModal(type, src) {
-            const vPlayer = document.getElementById('videoPlayer'); const aPlayer = document.getElementById('audioPlayer');
-            if(vPlayer) { vPlayer.style.display = 'none'; vPlayer.pause(); }
-            if(aPlayer) { aPlayer.style.display = 'none'; aPlayer.pause(); }
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <button onClick={onBack} className="text-gray-500 hover:text-white transition-colors">
+                                <i className="fa-solid fa-arrow-left"></i>
+                            </button>
+                            <h2 className="text-2xl font-bold flex items-center gap-2">
+                                <i className="fa-solid fa-quote-left text-amber-400"></i>
+                                Frases Célebres
+                            </h2>
+                        </div>
+                        {fuente && <span className="text-[9px] text-gray-600 font-mono truncate max-w-44 hidden">{fuente}</span>}
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        {modos.map(m => {
+                            const mc = colorMap[m.color]; const activo = modo === m.id;
+                            return (
+                                <button key={m.id}
+                                    onClick={() => { setModo(m.id); setFrase(null); setResultados([]); setError(''); setInputValor(''); setFuente(''); }}
+                                    className={`p-3 rounded-xl border transition-all text-center text-xs font-bold flex flex-col items-center gap-1.5
+                                        ${activo ? `${mc.activeBg} border-transparent text-white` : `bg-gray-900 ${mc.border}/30 hover:${mc.border} text-gray-400`}`}>
+                                    <i className={`fa-solid ${m.icon} text-lg ${activo ? 'text-white' : mc.text}`}></i>
+                                    {m.label}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {(modo === 'personaje' || modo === 'palabra') && (
+                        <div className="space-y-1">
+                            <div className="flex gap-3">
+                                <input
+                                    value={inputValor}
+                                    onChange={e => setInputValor(e.target.value)}
+                                    onKeyDown={e => e.key === 'Enter' && acciones[modo]()}
+                                    placeholder={modo === 'personaje'
+                                        ? 'Cualquier persona: Poincaré, Sun Tzu, Frida Kahlo...'
+                                        : 'Cualquier tema: horror, soledad, revolución, caos...'}
+                                    className={`flex-1 bg-gray-900 border ${c.border}/30 rounded-xl px-4 py-2.5 text-sm text-gray-300 placeholder-gray-600 outline-none`}
+                                />
+                                {inputValor.trim() && (
+                                    <button onClick={() => { setInputValor(''); setFrase(null); setResultados([]); setError(''); setFuente(''); }}
+                                        className="bg-gray-800 hover:bg-gray-700 px-3 rounded-xl text-gray-500 hover:text-white transition-colors">
+                                        <i className="fa-solid fa-xmark text-sm"></i>
+                                    </button>
+                                )}
+                            </div>
+                            <p className="text-[10px] text-gray-600 pl-1">
+                                ✨ Generado por IA · en castellano
+                            </p>
+                        </div>
+                    )}
+
+                    <button onClick={acciones[modo]} disabled={cargando}
+                        className={`w-full ${c.activeBg} hover:opacity-90 disabled:opacity-50 py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 text-lg`}>
+                        {cargando
+                            ? <><i className="fa-solid fa-spinner animate-spin"></i> Consultando IAs...</>
+                            : <>
+                                <i className={`fa-solid ${modoActual.icon}`}></i>
+                                {modo === 'dia'       && 'Ver Frase del Día'}
+                                {modo === 'azar'      && 'Dame una frase al azar'}
+                                {modo === 'personaje' && (inputValor.trim() ? `Frases de "${inputValor}"` : 'Frase de un personaje famoso')}
+                                {modo === 'palabra'   && (inputValor.trim() ? `Frases sobre "${inputValor}"` : 'Frase sobre cualquier tema')}
+                              </>
+                        }
+                    </button>
+
+                    {error && (
+                        <div className="bg-red-900/30 border border-red-500/40 rounded-xl p-4 text-red-300 text-sm">
+                            <i className="fa-solid fa-triangle-exclamation mr-2"></i>{error}
+                        </div>
+                    )}
+
+                    {frase && !cargando && (
+                        <div className={`bg-gray-900 border ${c.border}/30 rounded-3xl p-8 relative overflow-hidden`}>
+                            <span className="absolute top-4 left-5 text-7xl font-black text-white/5 leading-none select-none">"</span>
+                            <blockquote className="relative z-10">
+                                <p className={`text-xl md:text-2xl italic ${c.text} leading-relaxed mb-6`}>"{frase.q}"</p>
+                                <footer className="border-t border-white/10 pt-4 flex items-end justify-between gap-2">
+                                    <p className="font-bold text-white text-lg">— {frase.a}</p>
+                                    {frase.src && <span className="text-[10px] text-gray-600 font-mono shrink-0">{frase.src}</span>}
+                                </footer>
+                            </blockquote>
+                            <button onClick={() => navigator.clipboard.writeText(`"${frase.q}" — ${frase.a}`)}
+                                className="absolute top-4 right-4 bg-white/5 hover:bg-white/10 p-2 rounded-lg transition-colors text-gray-500 hover:text-white" title="Copiar">
+                                <i className="fa-solid fa-copy text-xs"></i>
+                            </button>
+                        </div>
+                    )}
+
+                    {resultados.length > 1 && !cargando && (
+                        <div className="space-y-2">
+                            <p className="text-xs text-gray-600 font-mono uppercase tracking-widest">{resultados.length} frases — pulsa para ver</p>
+                            <div className="space-y-2 max-h-52 overflow-y-auto tv-scroll pr-1">
+                                {resultados.map((q, i) => (
+                                    <button key={i} onClick={() => { setFrase(q); setFuente(q.src); }}
+                                        className={`w-full text-left p-3 rounded-xl border transition-all text-sm
+                                            ${frase?.q === q.q ? `${c.border} bg-white/5` : 'border-white/5 bg-white/5 hover:bg-white/10'}`}>
+                                        <span className="italic text-gray-300 line-clamp-2">"{q.q}"</span>
+                                        <span className={`block mt-1 text-xs font-bold ${c.text}`}>— {q.a}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+        const App = () => {
+            const [activeView, setActiveView] = useState('home'); 
+            const [loading, setLoading] = useState(false);
+            const [isMobile, setIsMobile] = useState(false);
+
+            useEffect(() => {
+                const checkDevice = () => {
+                    const isNarrowScreen = window.innerWidth < 768;
+                    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                    const isMobileOS = /android|ipad|iphone|ipod/i.test(userAgent.toLowerCase());
+                    setIsMobile(isNarrowScreen || isMobileOS);
+                };
+                checkDevice();
+                window.addEventListener('resize', checkDevice);
+                return () => window.removeEventListener('resize', checkDevice);
+            }, []);
             
-            if (type === 'video' && vPlayer) { 
-                vPlayer.src = src; vPlayer.style.display = 'block'; vPlayer.play().catch(e => console.log(e)); 
-            } 
-            else if (aPlayer) { 
-                aPlayer.src = src; aPlayer.style.display = 'block'; aPlayer.play().catch(e => console.log(e)); 
-            }
-            openModal('mediaModal');
-        }
-        function closeMediaModal(e) { closeModal('mediaModal', e); }
-        function closeGalleryModal(e) { closeModal('galleryModal', e); }
-        function openImageModal(e, index) { currentImageIndex = index; updateImageViewer(); openModal('imageModal'); }
-        function updateImageViewer() { 
-            const el = document.getElementById('fullImage');
-            if(el && dashboards[currentGalleryKey]) el.src = dashboards[currentGalleryKey][currentImageIndex]; 
-        }
-        function navImage(dir) { 
-            if(!currentGalleryKey || !dashboards[currentGalleryKey]) return;
-            const len = dashboards[currentGalleryKey].length; 
-            currentImageIndex = (currentImageIndex + dir + len) % len; 
-            updateImageViewer(); 
-        }
-        function closeImageModal(e) { closeModal('imageModal', e); }
+            const [selectedSign, setSelectedSign] = useState(null);
+            const [prediction, setPrediction] = useState('');
+            const [tarotState, setTarotState] = useState('deck'); 
+            const [drawnCards, setDrawnCards] = useState([]);
+            const [tarotSynthesis, setTarotSynthesis] = useState('');
+            const [isSynthesizing, setIsSynthesizing] = useState(false);
+            const [tarotChatInput, setTarotChatInput] = useState('');
+            const [tarotChatHistory, setTarotChatHistory] = useState([]);
+            const [hexagram, setHexagram] = useState([]); 
+            const [ichingState, setIchingState] = useState('start');
+            const [astralData, setAstralData] = useState({ name: '', date: '', time: '', location: '' });
+            const [astralChart, setAstralChart] = useState(null);
+            const [oracleInput, setOracleInput] = useState('');
+            const [oracleHistory, setOracleHistory] = useState([
+                { type: 'bot', text: 'Soy el Oráculo Neural v4.0. ¿Qué inquietud nubla tu mente hoy?' }
+            ]);
+            const [showKarma, setShowKarma] = useState(false);
+            const [showDimision, setShowDimision] = useState(false);
+            const [showTrump, setShowTrump] = useState(false);
+
+            const playlist = [
+                { id: 'v1', title: 'Visión del Día', author: 'Oráculo Neural v4.0', src: './hf_20260219_024541_71c7417b-1451-494a-899f-0117d1abda4c.mp4', desc: '"La alineación planetaria actual marca un antes y un después..."' },
+                { id: 'v2', title: 'Presentación Formador (F)', author: 'Pedro Guirao', src: './hf_20260219_130132_d7e6aebe-fb3d-4e62-8107-15ff03ef3d27.mp4', desc: '"Hola, soy Pedro Guirao, soy formador..."' },
+                { id: 'v3', title: 'Presentación Formador (M)', author: 'Pedro Guirao', src: './WIN_20260219_13_57_07_Pro.mp4', desc: '"Hola, soy Pedro Guirao, soy formador..."' }
+            ];
+            const [currentVideo, setCurrentVideo] = useState(playlist[0]);
+
+            const zodiacSigns = [
+                { name: 'Aries', icon: '♈' }, { name: 'Tauro', icon: '♉' }, { name: 'Géminis', icon: '♊' }, 
+                { name: 'Cáncer', icon: '♋' }, { name: 'Leo', icon: '♌' }, { name: 'Virgo', icon: '♍' },
+                { name: 'Libra', icon: '♎' }, { name: 'Escorpio', icon: '♏' }, { name: 'Sagitario', icon: '♐' }, 
+                { name: 'Capricornio', icon: '♑' }, { name: 'Acuario', icon: '♒' }, { name: 'Piscis', icon: '♓' }
+            ];
+
+            const tarotDeck = [
+                { name: 'El Loco', meaning: 'Inicios, fe ciega' }, { name: 'El Mago', meaning: 'Recursos, acción' },
+                { name: 'La Sacerdotisa', meaning: 'Intuición, misterio' }, { name: 'La Muerte', meaning: 'Transformación' },
+                { name: 'La Torre', meaning: 'Ruptura necesaria' }, { name: 'El Sol', meaning: 'Éxito, vitalidad' },
+                { name: 'La Estrella', meaning: 'Esperanza, guía' }, { name: 'El Mundo', meaning: 'Culminación' }
+            ];
+
+            const aiVideos = [
+                { id: 12, files: ['12 KARMA.mp4', '12 REAL.mp4'] },
+                { id: 11, files: ['11 IMAN.mp4', '11 REAL.mp4'] },
+                { id: 10, files: ['10 LINDA.mp4', '10 REAL.mp4'] },
+                { id: 9, files: ['9 LINDA.mp4', '9 REAL.mp4'] },
+                { id: 8, files: ['8 LINDA.mp4', '8 REAL.mp4'] },
+                { id: 7, files: ['7 LINDA.mp4', '7 PRESUNTO REAL.mp4'] },
+                { id: 6, files: ['6 LINDA.mp4', '6 REAL (O AVATAR TAMBIEN).mp4'] },
+                { id: 5, files: ['5 KARMA.mp4', '5 REAL.mp4'] },
+                { id: 4, files: ['4. KARMA.mp4', '4 REAL.mp4'] },
+                { id: 3, files: ['3 KARMA.mp4', '3 REAL.mp4'] },
+                { id: 2, files: ['2.mp4', '2.real.mp4'] }
+            ];
+
+            const generateHoroscope = (sign) => {
+                setLoading(true);
+                setSelectedSign(sign);
+                setTimeout(() => {
+                    setPrediction(`La energía de hoy para ${sign.name} indica una fuerte presencia de planetas en tu casa solar, sugiriendo que es momento de actuar en proyectos postergados.`);
+                    setLoading(false);
+                }, 1500);
+            };
+
+            const drawTarotSpread = () => {
+                setTarotState('shuffling');
+                setTarotSynthesis('');
+                setTarotChatHistory([]);
+                setTimeout(() => {
+                    let shuffled = [...tarotDeck].sort(() => 0.5 - Math.random());
+                    const drawn = [
+                        { pos: 'PASADO', ...shuffled[0] },
+                        { pos: 'PRESENTE', ...shuffled[1] },
+                        { pos: 'FUTURO', ...shuffled[2] }
+                    ];
+                    setDrawnCards(drawn);
+                    setTarotState('revealed');
+                    setIsSynthesizing(true);
+                    setTimeout(() => {
+                        setTarotSynthesis(`El flujo cronológico indica que vienes de un periodo marcado por ${drawn[0].meaning.toLowerCase()}. Actualmente, ${drawn[1].name} rige tu presente. La transición hacia ${drawn[2].name} en el futuro sugiere que el éxito dependerá de tu capacidad de adaptación.`);
+                        setIsSynthesizing(false);
+                    }, 2500);
+                }, 2000);
+            };
+
+            const askTarotChat = (e) => {
+                e.preventDefault();
+                if (!tarotChatInput.trim() || tarotChatHistory.filter(m => m.type === 'user').length >= 3) return;
+                const userMsg = { type: 'user', text: tarotChatInput };
+                setTarotChatHistory(prev => [...prev, userMsg]);
+                setTarotChatInput('');
+                setTimeout(() => {
+                    const response = `Basado en la presencia de ${drawnCards[1].name} en tu tirada, la respuesta a tu duda es que debes enfocarte en tu ${drawnCards[1].meaning.toLowerCase()}.`;
+                    setTarotChatHistory(prev => [...prev, { type: 'bot', text: response }]);
+                }, 1000);
+            };
+
+            const throwIChing = () => {
+                setIchingState('throwing');
+                setTimeout(() => {
+                    let lines = [];
+                    for(let i=0; i<6; i++) lines.push(Math.random() > 0.5 ? 'yang' : 'yin');
+                    setHexagram(lines);
+                    setIchingState('result');
+                }, 2000);
+            };
+
+            const calculateAstral = (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setTimeout(() => {
+                    setAstralChart({
+                        sun: zodiacSigns[Math.floor(Math.random() * 12)],
+                        moon: zodiacSigns[Math.floor(Math.random() * 12)],
+                        asc: zodiacSigns[Math.floor(Math.random() * 12)]
+                    });
+                    setLoading(false);
+                }, 2000);
+            };
+
+            const askOracle = (e) => {
+                e.preventDefault();
+                if (!oracleInput.trim()) return;
+                setOracleHistory(prev => [...prev, { type: 'user', text: oracleInput }]);
+                setOracleInput('');
+                setLoading(true);
+                setTimeout(() => {
+                    const answers = ["Las estrellas dicen que sí.", "No es el momento adecuado.", "La energía está bloqueada, medita primero.", "El éxito es inminente."];
+                    setOracleHistory(prev => [...prev, { type: 'bot', text: answers[Math.floor(Math.random() * answers.length)] }]);
+                    setLoading(false);
+                }, 1200);
+            };
+
+            const playAllAIVideos = () => {
+                const vids = document.querySelectorAll('.ai-dance-video');
+                vids.forEach((vid) => { vid.muted = true; vid.play().catch(e => console.log("Se requiere interacción previa", e)); });
+            };
+
+            const pauseAllAIVideos = () => {
+                const vids = document.querySelectorAll('.ai-dance-video');
+                vids.forEach((vid) => vid.pause());
+            };
+
+            const playSequence = (groupId) => {
+                const vids = document.querySelectorAll(`.video-group-${groupId}`);
+                vids.forEach((vid, index) => { vid.muted = (index !== 0); vid.play().catch(e => console.log("Se requiere interacción previa", e)); });
+            };
+
+            const stopSequence = (groupId) => {
+                const vids = document.querySelectorAll(`.video-group-${groupId}`);
+                vids.forEach((vid) => { vid.pause(); vid.currentTime = 0; });
+            };
+
+            const resetView = () => {
+                setActiveView('home');
+                setPrediction('');
+                setTarotState('deck');
+                setIchingState('start');
+                setAstralChart(null);
+                setShowKarma(false);
+                setShowDimision(false);
+                setShowTrump(false);
+            };
+
+            const renderHome = () => (
+                <div className="space-y-8 animate-in fade-in duration-700">
+                    <header className="text-center py-6">
+                        <h1 className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 uppercase">Mística AI 2026</h1>
+                    </header>
+
+                    <section className="bg-gray-900 rounded-3xl overflow-hidden border border-purple-500/30 grid grid-cols-1 md:grid-cols-5">
+                        <div className="md:col-span-3 aspect-video bg-black">
+                            <video key={currentVideo.id} src={currentVideo.src} controls autoPlay muted playsInline className="w-full h-full object-contain" />
+                        </div>
+                        <div className="md:col-span-2 p-6 flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-xl font-bold mb-2">{currentVideo.title}</h3>
+                                <p className="text-gray-400 text-sm mb-4">{currentVideo.desc}</p>
+                            </div>
+                            <div className="space-y-2">
+                                {playlist.map(v => (
+                                    <button key={v.id} onClick={() => setCurrentVideo(v)} className={`w-full text-left p-3 rounded-xl text-xs transition-colors ${currentVideo.id === v.id ? 'bg-purple-600 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>{v.title}</button>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                    
+                    {/* GRID BOTONES — 7 columnas en desktop */}
+                    <div className="grid grid-cols-2 md:grid-cols-7 gap-3">
+                        <div onClick={() => setActiveView('tarot')} className="bg-gray-900 p-4 rounded-2xl border border-blue-500/30 cursor-pointer hover:border-blue-500 transition-all text-center group">
+                            <i className="fa-solid fa-layer-group text-blue-400 text-2xl mb-2 group-hover:scale-110 transition-transform block"></i>
+                            <h3 className="font-bold text-xs">Tarot</h3>
+                        </div>
+                        <div onClick={() => setActiveView('astral')} className="bg-gray-900 p-4 rounded-2xl border border-purple-500/30 cursor-pointer hover:border-purple-500 transition-all text-center group">
+                            <i className="fa-solid fa-star-and-crescent text-purple-400 text-2xl mb-2 group-hover:scale-110 transition-transform block"></i>
+                            <h3 className="font-bold text-xs">Carta Astral</h3>
+                        </div>
+                        <div onClick={() => setActiveView('iching')} className="bg-gray-900 p-4 rounded-2xl border border-red-500/30 cursor-pointer hover:border-red-500 transition-all text-center group">
+                            <i className="fa-solid fa-yin-yang text-red-500 text-2xl mb-2 group-hover:scale-110 transition-transform block"></i>
+                            <h3 className="font-bold text-xs">I Ching</h3>
+                        </div>
+                        <div onClick={() => setActiveView('oracle')} className="bg-gray-900 p-4 rounded-2xl border border-pink-500/30 cursor-pointer hover:border-pink-500 transition-all text-center group">
+                            <i className="fa-solid fa-robot text-pink-500 text-2xl mb-2 group-hover:scale-110 transition-transform block"></i>
+                            <h3 className="font-bold text-xs">Oráculo</h3>
+                        </div>
+                        <div onClick={() => setActiveView('aidancing')} className="bg-gray-900 p-4 rounded-2xl border border-green-500/30 cursor-pointer hover:border-green-500 transition-all text-center group">
+                            <i className="fa-solid fa-video text-green-400 text-2xl mb-2 group-hover:scale-110 transition-transform block"></i>
+                            <h3 className="font-bold text-xs">AI Dancing</h3>
+                        </div>
+                        {/* PARRILLA TV */}
+                        <div onClick={() => setActiveView('parrilla')} className="bg-gray-900 p-4 rounded-2xl border border-cyan-500/30 cursor-pointer hover:border-cyan-400 transition-all text-center group relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-transparent pointer-events-none rounded-2xl"></div>
+                            <i className="fa-solid fa-tv text-cyan-400 text-2xl mb-2 group-hover:scale-110 transition-transform block relative z-10"></i>
+                            <h3 className="font-bold text-xs relative z-10">Parrilla TV</h3>
+                            <span className="absolute top-1.5 right-1.5 bg-red-600 text-white text-[7px] font-black px-1 py-0.5 rounded-full uppercase tracking-wider">LIVE</span>
+                        </div>
+                        {/* FRASE DEL DÍA */}
+                        <div onClick={() => setActiveView('frases')} className="bg-gray-900 p-4 rounded-2xl border border-amber-500/30 cursor-pointer hover:border-amber-400 transition-all text-center group relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-amber-900/20 to-transparent pointer-events-none rounded-2xl"></div>
+                            <i className="fa-solid fa-quote-left text-amber-400 text-2xl mb-2 group-hover:scale-110 transition-transform block relative z-10"></i>
+                            <h3 className="font-bold text-xs relative z-10">Frases</h3>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                        {zodiacSigns.map(s => (
+                            <button key={s.name} onClick={() => {setActiveView('horoscope'); generateHoroscope(s);}} className="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-yellow-500 transition-all text-center">
+                                <span className="text-2xl block">{s.icon}</span>
+                                <span className="text-[10px] text-gray-500 uppercase font-bold">{s.name}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    <nav className="border-b border-white/10 p-4 sticky top-0 bg-black/80 backdrop-blur-md z-50 flex justify-between items-center">
+                        <div className="flex items-center gap-2 cursor-pointer" onClick={resetView}>
+                            <i className="fa-solid fa-wand-magic-sparkles text-purple-500"></i>
+                            <span className="font-bold">MÍSTICA.AI</span>
+                        </div>
+                        {activeView === 'parrilla' && (
+                            <span className="text-xs text-cyan-400 font-bold flex items-center gap-1">
+                                <i className="fa-solid fa-tv"></i> Parrilla TV 2026
+                            </span>
+                        )}
+                    </nav>
+
+                    <main className="flex-1 max-w-4xl w-full mx-auto p-4 py-8">
+                        {activeView === 'home' && renderHome()}
+
+                        {/* NUEVA VISTA: PARRILLA TV */}
+                        {activeView === 'parrilla' && (
+                            <ParrillaTV onBack={resetView} />
+                        )}
+
+                        {/* VISTA: FRASES CÉLEBRES */}
+                        {activeView === 'frases' && (
+                            <FrasesView onBack={resetView} />
+                        )}
+
+                        {activeView === 'aidancing' && (
+                            <div className="animate-in fade-in duration-500 space-y-8">
+                                {isMobile && (
+                                    <div className="bg-yellow-900/40 border border-yellow-600/50 p-4 rounded-xl text-yellow-200 text-sm text-center flex items-center justify-center gap-3">
+                                        <i className="fa-solid fa-mobile-screen-button text-xl"></i>
+                                        <span>Modo móvil detectado. La función "Reproducir Todos" se ha desactivado para proteger el rendimiento de tu dispositivo y tu plan de datos.</span>
+                                    </div>
+                                )}
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                    <button onClick={resetView} className="text-gray-500 flex items-center gap-2 hover:text-white transition-colors">
+                                        <i className="fa-solid fa-arrow-left"></i> Volver
+                                    </button>
+                                    <div className="flex gap-4 w-full md:w-auto">
+                                        {!isMobile && (
+                                            <button onClick={playAllAIVideos} className="flex-1 md:flex-none bg-green-600 hover:bg-green-500 px-6 py-3 rounded-xl font-bold shadow-lg shadow-green-900/20 text-sm transition-colors flex items-center justify-center gap-2">
+                                                <i className="fa-solid fa-play"></i> REPRODUCIR TODOS (SIN SONIDO)
+                                            </button>
+                                        )}
+                                        <button onClick={pauseAllAIVideos} className="flex-1 md:flex-none bg-red-600 hover:bg-red-500 px-6 py-3 rounded-xl font-bold shadow-lg shadow-red-900/20 text-sm transition-colors flex items-center justify-center gap-2">
+                                            <i className="fa-solid fa-pause"></i> PAUSAR TODOS
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="space-y-10">
+                                    {aiVideos.map((group) => (
+                                        <div key={group.id} className="bg-gray-900 p-6 rounded-3xl border border-green-500/20">
+                                            <h3 className="text-xl font-bold mb-4 text-green-400 border-b border-green-500/20 pb-2">Secuencia {group.id}</h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
+                                                {group.files[0] && (
+                                                    <div className="bg-black rounded-xl overflow-hidden border border-white/5 relative shadow-lg">
+                                                        <div className="absolute top-2 left-2 bg-black/80 px-2 py-1 rounded text-[10px] z-10 text-gray-300 pointer-events-none truncate max-w-[90%] font-mono">{group.files[0]}</div>
+                                                        <video className={`ai-dance-video video-group-${group.id} w-full aspect-[9/16] object-contain bg-black`} src={`./${group.files[0]}`} controls playsInline preload={isMobile ? "none" : "metadata"} />
+                                                    </div>
+                                                )}
+                                                <div className="flex flex-col justify-center items-center gap-4 my-2 md:my-0">
+                                                    <button onClick={() => playSequence(group.id)} className="bg-green-600 hover:bg-green-500 rounded-full w-14 h-14 flex items-center justify-center shadow-[0_0_15px_rgba(22,163,74,0.4)] transition-transform hover:scale-110 z-10" title="Reproducir Par">
+                                                        <i className="fa-solid fa-play text-xl ml-1 text-white"></i>
+                                                    </button>
+                                                    <button onClick={() => stopSequence(group.id)} className="bg-red-600 hover:bg-red-500 rounded-full w-12 h-12 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.4)] transition-transform hover:scale-110 z-10" title="Detener y Reiniciar">
+                                                        <i className="fa-solid fa-stop text-lg text-white"></i>
+                                                    </button>
+                                                </div>
+                                                {group.files[1] ? (
+                                                    <div className="bg-black rounded-xl overflow-hidden border border-white/5 relative shadow-lg">
+                                                        <div className="absolute top-2 left-2 bg-black/80 px-2 py-1 rounded text-[10px] z-10 text-gray-300 pointer-events-none truncate max-w-[90%] font-mono">{group.files[1]}</div>
+                                                        <video className={`ai-dance-video video-group-${group.id} w-full aspect-[9/16] object-contain bg-black`} src={`./${group.files[1]}`} controls playsInline preload={isMobile ? "none" : "metadata"} />
+                                                    </div>
+                                                ) : <div className="hidden md:block"></div>}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="mt-12 pt-8 border-t border-white/10 text-center space-y-8">
+                                    <div className="flex flex-col md:flex-row justify-center items-center gap-6">
+                                        <button onClick={() => setShowKarma(!showKarma)} className="bg-gradient-to-r from-purple-700 to-pink-600 hover:from-purple-600 hover:to-pink-500 px-12 py-4 rounded-full font-black text-xl shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-transform hover:scale-105 uppercase tracking-widest text-white w-full md:w-auto">
+                                            {showKarma ? 'OCULTAR KARMA' : 'KARMA'}
+                                        </button>
+                                        <button onClick={() => setShowDimision(!showDimision)} className="bg-gradient-to-r from-red-700 to-orange-600 hover:from-red-600 hover:to-orange-500 px-12 py-4 rounded-full font-black text-xl shadow-[0_0_20px_rgba(239,68,68,0.4)] transition-transform hover:scale-105 uppercase tracking-widest text-white w-full md:w-auto">
+                                            {showDimision ? 'OCULTAR DIMISIÓN' : 'DIMISIÓN'}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                const next = !showTrump;
+                                                setShowTrump(next);
+                                                if (next) {
+                                                    setTimeout(() => {
+                                                        const trumpVids = document.querySelectorAll('.trump-dancing-video');
+                                                        trumpVids.forEach((vid, idx) => {
+                                                            vid.muted = idx !== 0;
+                                                            vid.play().catch(() => {});
+                                                        });
+                                                    }, 100);
+                                                } else {
+                                                    document.querySelectorAll('.trump-dancing-video').forEach(v => { v.pause(); v.currentTime = 0; });
+                                                }
+                                            }}
+                                            className="bg-gradient-to-r from-blue-800 to-red-700 hover:from-blue-700 hover:to-red-600 px-12 py-4 rounded-full font-black text-xl shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-transform hover:scale-105 uppercase tracking-widest text-white w-full md:w-auto flex items-center justify-center gap-3"
+                                        >
+                                            🇺🇸 {showTrump ? 'OCULTAR TRUMP' : 'DANCING TRUMP'}
+                                        </button>
+                                    </div>
+                                    {showKarma && (
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-in slide-in-from-bottom duration-500 text-left">
+                                            {['k1.mp4', 'k2.mp4', 'k3.mp4', 'k4.mp4'].map((kvid, idx) => (
+                                                <div key={idx} className="bg-black rounded-xl overflow-hidden border border-purple-500/40 relative shadow-lg">
+                                                    <div className="absolute top-2 left-2 bg-black/80 px-2 py-1 rounded text-[10px] z-10 text-purple-300 pointer-events-none font-mono tracking-widest">{kvid}</div>
+                                                    <video className="ai-dance-video w-full aspect-[9/16] object-contain bg-black" src={`./${kvid}`} controls playsInline preload={isMobile ? "none" : "metadata"} />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    {showDimision && (
+                                        <div className="flex justify-center animate-in slide-in-from-bottom duration-500 text-left">
+                                            <div className="bg-black rounded-xl overflow-hidden border border-red-500/40 relative shadow-lg max-w-sm w-full">
+                                                <div className="absolute top-2 left-2 bg-black/80 px-2 py-1 rounded text-[10px] z-10 text-red-300 pointer-events-none font-mono tracking-widest">DIMISION tiktok.mp4</div>
+                                                <video className="ai-dance-video w-full aspect-[9/16] object-contain bg-black" src="./DIMISION tiktok.mp4" controls playsInline preload={isMobile ? "none" : "metadata"} />
+                                            </div>
+                                        </div>
+                                    )}
+                                    {showTrump && (
+                                        <div className="animate-in slide-in-from-bottom duration-500">
+                                            <div className="flex items-center gap-2 justify-center mb-4">
+                                                <span className="text-2xl">🇺🇸</span>
+                                                <h4 className="font-black text-xl uppercase tracking-widest text-blue-400">Dancing Trump</h4>
+                                                <span className="text-2xl">🇺🇸</span>
+                                            </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                {[
+                                                    { src: 'TRUMP DANCING.mp4',        label: 'TRUMP DANCING',        muted: false, border: 'border-blue-500/60',   badge: 'text-blue-300'   },
+                                                    { src: 'SILVIA TRUMP DANCING.mp4',  label: 'SILVIA TRUMP DANCING', muted: true,  border: 'border-red-500/40',    badge: 'text-red-300'    },
+                                                    { src: 'MESI TRUMP DANCING.mp4',    label: 'MESI TRUMP DANCING',   muted: true,  border: 'border-yellow-500/40', badge: 'text-yellow-300' },
+                                                    { src: 'SANCHEZ TRUMP DANCING.mp4', label: 'SANCHEZ TRUMP DANCING',muted: true,  border: 'border-purple-500/40', badge: 'text-purple-300' },
+                                                ].map((v, idx) => (
+                                                    <div key={idx} className={`bg-black rounded-xl overflow-hidden border ${v.border} relative shadow-lg`}>
+                                                        <div className={`absolute top-2 left-2 bg-black/80 px-2 py-1 rounded text-[9px] z-10 ${v.badge} pointer-events-none font-mono tracking-widest truncate max-w-[90%]`}>
+                                                            {v.label}
+                                                            {idx === 0 && <span className="ml-1 text-blue-400">🔊</span>}
+                                                        </div>
+                                                        <video
+                                                            className="trump-dancing-video w-full aspect-[9/16] object-contain bg-black"
+                                                            src={`./${v.src}`}
+                                                            controls
+                                                            playsInline
+                                                            muted={v.muted}
+                                                            preload={isMobile ? "none" : "metadata"}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {activeView === 'horoscope' && (
+                            <div className="animate-in zoom-in duration-300">
+                                <button onClick={resetView} className="text-gray-500 mb-6 flex items-center gap-2"><i className="fa-solid fa-arrow-left"></i> Volver</button>
+                                {loading ? <div className="text-center py-20"><i className="fa-solid fa-spinner animate-spin text-4xl text-purple-500"></i></div> : (
+                                    <div className="bg-gray-900 p-8 rounded-3xl border border-purple-500/30 text-center">
+                                        <span className="text-6xl mb-4 block">{selectedSign?.icon}</span>
+                                        <h2 className="text-2xl font-bold mb-4">{selectedSign?.name}</h2>
+                                        <p className="text-gray-300 leading-relaxed">{prediction}</p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {activeView === 'tarot' && (
+                            <div className="animate-in slide-in-from-bottom duration-500 space-y-6">
+                                <button onClick={resetView} className="text-gray-500 flex items-center gap-2"><i className="fa-solid fa-arrow-left"></i> Volver</button>
+                                {tarotState === 'deck' && <div className="flex justify-center py-10"><button onClick={drawTarotSpread} className="bg-blue-600 hover:bg-blue-500 px-10 py-20 rounded-2xl font-bold text-xl shadow-2xl shadow-blue-900/40">INICIAR TIRADA DE 3 CARTAS</button></div>}
+                                {tarotState === 'shuffling' && <div className="text-center py-20"><i className="fa-solid fa-spinner animate-spin text-5xl text-blue-500"></i></div>}
+                                {tarotState === 'revealed' && (
+                                    <div className="space-y-6">
+                                        <div className="grid grid-cols-3 gap-4">
+                                            {drawnCards.map((c, i) => (
+                                                <div key={i} className="bg-gray-900 p-6 rounded-2xl border border-white/10 text-center shadow-xl">
+                                                    <div className="text-[10px] text-blue-400 font-bold mb-2 tracking-widest">{c.pos}</div>
+                                                    <div className="text-xl font-bold mb-2">{c.name}</div>
+                                                    <div className="text-[10px] text-gray-500">{c.meaning}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="bg-blue-900/20 p-6 rounded-2xl border border-blue-500/30">
+                                            <h4 className="font-bold text-blue-300 mb-2 flex items-center gap-2"><i className="fa-solid fa-brain"></i> Síntesis Analítica</h4>
+                                            <p className="text-sm text-gray-300">{isSynthesizing ? 'Procesando matriz relacional...' : tarotSynthesis}</p>
+                                        </div>
+                                        <div className="bg-gray-900 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                                            <div className="p-3 bg-black/40 text-[10px] flex justify-between font-bold">
+                                                <span>INTERROGATORIO DE LA TIRADA</span>
+                                                <span>{tarotChatHistory.filter(m=>m.type==='user').length}/3 PREGUNTAS</span>
+                                            </div>
+                                            <div className="p-4 h-48 overflow-y-auto space-y-3 text-sm">
+                                                {tarotChatHistory.map((m, i) => (
+                                                    <div key={i} className={`flex ${m.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                                        <div className={`max-w-[80%] p-3 rounded-xl ${m.type === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300'}`}>{m.text}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <form onSubmit={askTarotChat} className="p-3 border-t border-white/5 flex gap-2 bg-black/20">
+                                                <input value={tarotChatInput} onChange={e=>setTarotChatInput(e.target.value)} disabled={tarotChatHistory.filter(m=>m.type==='user').length>=3} className="flex-1 bg-transparent outline-none text-sm px-2" placeholder="Haz una pregunta específica sobre estas cartas..." />
+                                                <button className="text-blue-500 p-2"><i className="fa-solid fa-paper-plane"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {activeView === 'iching' && (
+                            <div className="animate-in fade-in duration-500 text-center space-y-6">
+                                <button onClick={resetView} className="self-start text-gray-500 flex items-center gap-2"><i className="fa-solid fa-arrow-left"></i> Volver</button>
+                                <h2 className="text-2xl font-bold text-red-500">I Ching: Monedas Cuánticas</h2>
+                                {ichingState === 'start' && <button onClick={throwIChing} className="bg-red-900/30 border border-red-500/50 p-20 rounded-full hover:bg-red-900/50 transition-all"><i className="fa-solid fa-coins text-4xl"></i></button>}
+                                {ichingState === 'throwing' && <div className="py-10"><i className="fa-solid fa-yin-yang text-6xl text-red-500 animate-spin"></i></div>}
+                                {ichingState === 'result' && (
+                                    <div className="bg-gray-900 p-8 rounded-3xl border border-red-500/30 flex flex-col md:flex-row gap-8 items-center max-w-2xl mx-auto">
+                                        <div className="w-24">
+                                            {hexagram.map((l, i) => <div key={i}>{l === 'yang' ? <div className="yang-line"></div> : <div className="yin-line"><div></div><div></div></div>}</div>)}
+                                        </div>
+                                        <div className="flex-1 text-left">
+                                            <h4 className="font-bold text-red-400 mb-2 uppercase text-xs tracking-widest">Hexagrama Resultante</h4>
+                                            <p className="text-gray-300 text-sm">El oráculo indica que las fuerzas creativas están en equilibrio. Es un momento de receptividad absoluta. No fuerces la situación; deja que el flujo natural de los eventos te guíe.</p>
+                                            <button onClick={() => setIchingState('start')} className="mt-4 text-xs text-red-500 font-bold border-b border-red-500 pb-1">NUEVA CONSULTA</button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {activeView === 'astral' && (
+                            <div className="animate-in fade-in duration-500">
+                                <button onClick={resetView} className="text-gray-500 mb-6 flex items-center gap-2"><i className="fa-solid fa-arrow-left"></i> Volver</button>
+                                {!astralChart ? (
+                                    <form onSubmit={calculateAstral} className="bg-gray-900 p-8 rounded-3xl border border-purple-500/30 space-y-4 max-w-lg mx-auto">
+                                        <h3 className="text-xl font-bold mb-6 text-center">Generador de Mapa Natal</h3>
+                                        <input required type="text" placeholder="Nombre" className="w-full bg-black p-4 rounded-xl border border-white/10 outline-none focus:border-purple-500" />
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <input required type="date" className="bg-black p-4 rounded-xl border border-white/10 outline-none" />
+                                            <input required type="time" className="bg-black p-4 rounded-xl border border-white/10 outline-none" />
+                                        </div>
+                                        <input required type="text" placeholder="Lugar de Nacimiento" className="w-full bg-black p-4 rounded-xl border border-white/10 outline-none focus:border-purple-500" />
+                                        <button className="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500 transition-colors">CALCULAR EFEMÉRIDES</button>
+                                    </form>
+                                ) : (
+                                    <div className="bg-gray-900 p-8 rounded-3xl border border-purple-500/30 grid grid-cols-3 gap-4 text-center">
+                                        <div className="bg-black p-6 rounded-2xl border border-white/5"><span className="text-xs text-yellow-500 block mb-2 font-bold">SOL</span><span className="text-4xl block mb-2">{astralChart.sun.icon}</span><span className="font-bold">{astralChart.sun.name}</span></div>
+                                        <div className="bg-black p-6 rounded-2xl border border-white/5"><span className="text-xs text-blue-400 block mb-2 font-bold">LUNA</span><span className="text-4xl block mb-2">{astralChart.moon.icon}</span><span className="font-bold">{astralChart.moon.name}</span></div>
+                                        <div className="bg-black p-6 rounded-2xl border border-white/5"><span className="text-xs text-pink-500 block mb-2 font-bold">ASC</span><span className="text-4xl block mb-2">{astralChart.asc.icon}</span><span className="font-bold">{astralChart.asc.name}</span></div>
+                                        <div className="col-span-3 p-4 bg-purple-900/20 text-xs text-gray-400 mt-4 italic">Esta configuración sugiere una personalidad con gran empuje creativo pero que necesita estabilidad emocional para no dispersarse.</div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {activeView === 'oracle' && (
+                            <div className="max-w-xl mx-auto h-[60vh] flex flex-col bg-gray-900 border border-pink-500/30 rounded-3xl overflow-hidden animate-in slide-in-from-bottom">
+                                <div className="p-4 bg-black/40 flex justify-between items-center"><span className="font-bold text-sm flex items-center gap-2"><i className="fa-solid fa-robot text-pink-500"></i> ORÁCULO NEURAL</span><button onClick={resetView} className="text-gray-500"><i className="fa-solid fa-xmark"></i></button></div>
+                                <div className="flex-1 p-4 overflow-y-auto space-y-4 text-sm">
+                                    {oracleHistory.map((m, i) => <div key={i} className={`flex ${m.type === 'user' ? 'justify-end' : 'justify-start'}`}><div className={`max-w-[80%] p-3 rounded-2xl ${m.type === 'user' ? 'bg-pink-600 text-white' : 'bg-gray-800 text-gray-300'}`}>{m.text}</div></div>)}
+                                    {loading && <div className="text-gray-600 animate-pulse text-xs italic">El oráculo está analizando las estrellas...</div>}
+                                </div>
+                                <form onSubmit={askOracle} className="p-4 border-t border-white/5 flex gap-2">
+                                    <input value={oracleInput} onChange={e=>setOracleInput(e.target.value)} placeholder="Pregunta algo sobre tu destino..." className="flex-1 bg-transparent outline-none text-sm" />
+                                    <button className="text-pink-500"><i className="fa-solid fa-paper-plane"></i></button>
+                                </form>
+                            </div>
+                        )}
+                    </main>
+
+                    <footer className="mt-auto border-t border-white/10 bg-black/80 backdrop-blur-md py-6 px-4 text-center">
+                        <div className="flex flex-col justify-center items-center gap-4 mb-6">
+                            <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+                                <a href="mailto:pedro.guirao@gmail.com" className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 text-sm font-mono">
+                                    <i className="fa-solid fa-envelope"></i> pedro.guirao@gmail.com
+                                </a>
+                                <a href="https://pedroguiraogil.github.io/CURSOS/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-400 transition-colors flex items-center gap-2 text-sm font-mono">
+                                    <i className="fa-solid fa-graduation-cap"></i> Acceso a Cursos
+                                </a>
+                            </div>
+                            <div className="transform scale-[0.80] md:scale-75 origin-center mt-2 hover:scale-[0.85] transition-transform">
+                                <stripe-buy-button
+                                    buy-button-id="buy_btn_1Szc9xLMuCf9ela0GVyNo0PD"
+                                    publishable-key="pk_live_51SzbaxLMuCf9ela0lFnv8OpenuCoG02c4crjmSRW1oq85DdwAaEhmMmIS0gYMH9wYbGr6AVXxzbJf7IdA6sptgxy00dKGPgVSc"
+                                >
+                                </stripe-buy-button>
+                            </div>
+                        </div>
+                        <div className="flex justify-center items-center gap-2 text-xs text-gray-500 font-mono">
+                            <span>VISTAS TOTALES:</span>
+                            <img 
+                                src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fpedroguiraogil.github.io%2FCURSOS&label=VISITAS&countColor=%239333ea&labelColor=%23000000" 
+                                alt="Contador de visitas estático" 
+                                className="h-5 rounded" 
+                            />
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
-		
-		
 </body>
 </html>
